@@ -50,7 +50,7 @@ public class SpotifyController {
 			SpotifyApi object = spotifyConfiguration.getSpotifyObject();
 
 			AuthorizationCodeUriRequest authorizationCodeUriRequest = object.authorizationCodeUri()
-					.scope("user-library-read")
+					.scope("user-library-read user-read-private user-read-email user-top-read")
 					.show_dialog(true)
 					.build();
 
@@ -63,27 +63,29 @@ public class SpotifyController {
 	}
 
 	@GetMapping(value = "get-user-code")
-	public void getSpotifyUserCode(@RequestParam("code") String userCode, HttpServletResponse response)	throws IOException {
+	public void getSpotifyUserCode(@RequestParam("code") String userCode, HttpServletResponse response) throws IOException {
 		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
-		
+
 		AuthorizationCodeRequest authorizationCodeRequest = object.authorizationCode(userCode).build();
 		User user = null;
-		
+
 		try {
 			final AuthorizationCodeCredentials authorizationCode = authorizationCodeRequest.execute();
 
 			object.setAccessToken(authorizationCode.getAccessToken());
 			object.setRefreshToken(authorizationCode.getRefreshToken());
-			
+
 			final GetCurrentUsersProfileRequest getCurrentUsersProfile = object.getCurrentUsersProfile().build();
 			user = getCurrentUsersProfile.execute();
 
 			userProfileService.insertOrUpdateUserDetails(user, authorizationCode.getAccessToken(), authorizationCode.getRefreshToken());
 		} catch (Exception e) {
-			System.out.println("Exception occured while getting user code: " + e);
+			System.out.println("Exception occurred while getting user code: " + e);
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error processing user code");
+			return;
 		}
 
-		response.sendRedirect(customIp + "/home?id="+user.getId());
+		response.sendRedirect(customIp + "/home?id=" + user.getId());
 	}
 	
 	@GetMapping(value = "home")
