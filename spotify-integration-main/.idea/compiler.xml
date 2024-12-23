@@ -7,27 +7,30 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-      </profile>
-      <profile name="Annotation profile for Spotify-stats" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
-        </processorPath>
-        <module name="stats-updater" />
         <module name="stats-api" />
         <module name="stats-data" />
+        <module name="stats-service" />
         <module name="stats-client" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="spotify-api" target="17" />
+      <module name="spotify-client" target="17" />
+      <module name="spotify-data" target="17" />
+      <module name="spotify-service" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="spotify-api" options="-parameters" />
+      <module name="spotify-client" options="-parameters" />
+      <module name="spotify-data" options="-parameters" />
+      <module name="spotify-integration" options="" />
+      <module name="spotify-service" options="-parameters" />
       <module name="stats-api" options="-parameters" />
       <module name="stats-client" options="-parameters" />
       <module name="stats-data" options="-parameters" />
-      <module name="stats-updater" options="-parameters" />
+      <module name="stats-service" options="-parameters" />
     </option>
   </component>
 </project>
