@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/HomePage.css';
+import '../styles/HomePage.css'; // Import pliku CSS
 
 const HomePage = () => {
   const [userId, setUserId] = useState(null);
@@ -14,9 +14,9 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div>
+    <div className="home-page">
       {userId && (
-        <nav>
+        <nav className="nav-bar">
           <Link to={`/home?id=${userId}`}>Home</Link>
           <Link to={`/top-songs?id=${userId}`}>Top Songs</Link>
           <Link to={`/saved-albums?id=${userId}`}>Saved Albums</Link>   
@@ -24,9 +24,9 @@ const HomePage = () => {
       )}
 
       {userId ? (
-        <h1>Welcome, User {userId}</h1>
+        <h1 className="welcome-message">Welcome, User {userId}</h1>
       ) : (
-        <p>Loading...</p>
+        <p className="loading-message">Loading...</p>
       )}
     </div>
   );
