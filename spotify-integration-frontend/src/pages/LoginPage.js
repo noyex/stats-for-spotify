@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/LoginPage.css'; // Import pliku CSS
+import '../styles/LoginPage.css'; 
 
 const LoginPage = () => {
   const handleLogin = async () => {

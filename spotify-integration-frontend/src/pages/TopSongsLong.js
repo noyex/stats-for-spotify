@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom'; 
-import { getUserTopTracks } from '../services/spotifyService';
+import { getUserTopTracksLong} from '../services/spotifyService';
 import '../styles/TopSongs.css'; 
 
 const TopSongs = () => {
@@ -15,7 +15,7 @@ const TopSongs = () => {
     const fetchTopTracks = async () => {
       try {
         console.log("Fetching top tracks for userId:", userId);
-        const data = await getUserTopTracks(userId);
+        const data = await getUserTopTracksLong(userId);
         console.log("Fetched data:", data); 
         setTracks(data);
       } catch (err) {
@@ -38,12 +38,17 @@ const TopSongs = () => {
       {userId && (
         <nav className="nav-bar">
           <Link to={`/home?id=${userId}`}>Home</Link>
-          <Link to={`/top-songs?id=${userId}`}>Top Songs</Link>
+          <Link to={`/top-songs-medium?id=${userId}`}>Top Songs</Link>
           <Link to={`/saved-albums?id=${userId}`}>Saved Albums</Link>
-        </nav>
+          <Link to={`/user-recently-played?id=${userId}`}>Recently Played</Link>         </nav>
       )}
-      <h1>Your Top Songs</h1>
-  
+      <h1>Your Top Songs From Last 12 Months!</h1>
+        <nav className="nav-bar">
+          <Link to={`/top-songs-short?id=${userId}`}>Last 4 weeks</Link>
+          <Link to={`/top-songs-medium?id=${userId}`}>Last 6 months</Link>
+          <Link to={`/top-songs-long?id=${userId}`}>Last 12 months</Link>
+        </nav>      
+      
       {error && <div className="error">Error: {error}</div>}
   
       {loading ? (
