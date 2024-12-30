@@ -2,6 +2,7 @@ package com.jts.stats_service.service;
 
 import com.jts.stats_data.entity.UserDetails;
 import com.jts.stats_data.entity.UserDetailsRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

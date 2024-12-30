@@ -78,7 +78,9 @@ public class SpotifyController {
 			final GetCurrentUsersProfileRequest getCurrentUsersProfile = object.getCurrentUsersProfile().build();
 			user = getCurrentUsersProfile.execute();
 
-			userProfileService.insertOrUpdateUserDetails(user, authorizationCode.getAccessToken(), authorizationCode.getRefreshToken());
+			userProfileService.insertOrUpdateUserDetails(user,
+					authorizationCode.getAccessToken(),
+					authorizationCode.getRefreshToken());
 		} catch (Exception e) {
 			System.out.println("Exception occurred while getting user code: " + e);
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error processing user code");
@@ -134,7 +136,7 @@ public class SpotifyController {
 		
 		final GetUsersTopTracksRequest getUsersTopTracksRequest = object.getUsersTopTracks()
 				.time_range("medium_term")
-				.limit(10)
+				.limit(50)
 				.offset(0)
 				.build();
 
