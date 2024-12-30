@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LoginPage from './pages/LoginPage'; // Nowa strona logowania
+import LoginPage from './pages/LoginPage'; 
 import HomePage from './pages/HomePage';
 import TopSongs from './pages/TopSongs';
 import SavedAlbumsPage from './pages/SavedAlbumsPage';

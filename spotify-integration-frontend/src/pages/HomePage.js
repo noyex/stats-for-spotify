@@ -24,7 +24,7 @@ const HomePage = () => {
       )}
 
       {userId ? (
-        <h1 className="welcome-message">Welcome, User {userId}</h1>
+        <h1 className="welcome-message">Welcome, {userId}</h1>
       ) : (
         <p className="loading-message">Loading...</p>
       )}
