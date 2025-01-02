@@ -57,7 +57,7 @@ public class SpotifyController {
 			SpotifyApi object = spotifyConfiguration.getSpotifyObject();
 
 			AuthorizationCodeUriRequest authorizationCodeUriRequest = object.authorizationCodeUri()
-					.scope("user-library-read user-read-email user-top-read user-read-recently-played user-read-currently-playing")
+					.scope("user-library-read user-read-email user-read-private user-top-read user-read-recently-played user-read-currently-playing")
 					.show_dialog(true)
 					.build();
 
@@ -202,7 +202,6 @@ public class SpotifyController {
 	@GetMapping(value = "user-top-songs-Long")
 	public Track[] getUserTopTracksLong(@RequestParam String userId) {
 		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
-
 		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
 		object.setAccessToken(userDetails.getAccessToken());
 		object.setRefreshToken(userDetails.getRefreshToken());
@@ -281,6 +280,25 @@ public class SpotifyController {
 			System.out.println("Exception occurred while fetching currently playing track: " + e);
 		}
 
+		return null;
+	}
+
+	@GetMapping(value = "user-profile")
+	public User getCurrentUserProfile(@RequestParam String userId) {
+		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
+		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
+		object.setAccessToken(userDetails.getAccessToken());
+		object.setRefreshToken(userDetails.getRefreshToken());
+
+		final GetCurrentUsersProfileRequest getCurrentUsersProfileRequest = object.getCurrentUsersProfile()
+				.build();
+		try {
+			final User user = getCurrentUsersProfileRequest.execute();
+			System.out.println("Fetched User: " + user);
+			return user;
+		} catch (Exception e) {
+			System.out.println("Exception occurred while fetching user profile: " + e);
+		}
 		return null;
 	}
 }

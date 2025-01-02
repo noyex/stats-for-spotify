@@ -45,3 +45,11 @@ export const getUserSavedAlbums = async (userId) => {
   }
   return response.json();
 };
+
+export const getCurrentUserProfile = async (userId) => {
+  const response = await fetch(`/api/user-profile?userId=${userId}`);
+  if(!response.ok){
+    throw new Error(`Failed to get user's profile`);
+  }
+  return response.json();
+}

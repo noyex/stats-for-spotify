@@ -1,13 +1,43 @@
 .profile-page {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    min-height: 100vh;   
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  min-height: 100vh;
 }
 
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+}
 
-.logout-button {
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    object-fit: cover;
+}
+
+h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.logout-button, .spotify-profile-button {
     background-color: #1db954;
     border: none;
     padding: 10px 20px;
@@ -16,10 +46,11 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    gap: 10px;
 
 }
 
-.logout-button:hover {
+.logout-button:hover, .spotify-profile-button:hover {
     background-color: #1ed760;
     transform: scale(1.1);
 }
