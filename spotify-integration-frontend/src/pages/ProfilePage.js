@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import LogoutButton from '../components/LogoutButton';
 import SpotifyProfileButton from '../components/SpotifyProfileButton';
 import { Link } from 'react-router-dom';
-import { getCurrentUserProfile } from '../services/spotifyService';
+import { getCurrentUserProfile, getCurrentUserPlaylists } from '../services/spotifyService';
 import '../styles/Global.css';
 import '../styles/ProfilePage.css';
 
 const ProfilePage = () => {
     const [userId, setUserId] = useState(null);
-    const [profile, setProfile] = useState(null); // Przechowywanie danych profilu
+    const [profile, setProfile] = useState(null);
+    const [playlists, setPlaylists] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -17,6 +18,7 @@ const ProfilePage = () => {
         if (id) {
             setUserId(id);
             fetchUserProfile(id);
+            fetchUserPlaylists(id);
         }
     }, []);
 
@@ -26,6 +28,16 @@ const ProfilePage = () => {
             setProfile(data);
         } catch (err) {
             setError("Failed to load user profile.");
+            console.error(err);
+        }
+    };
+
+    const fetchUserPlaylists = async (id) => {
+        try {
+            const data = await getCurrentUserPlaylists(id); 
+            setPlaylists(data);
+        } catch (err) {
+            setError("Failed to load playlists.");
             console.error(err);
         }
     };
@@ -43,26 +55,58 @@ const ProfilePage = () => {
                     </>
                 )}
             </nav>
-            <h1>Your Profile</h1>
-            {error && <p className="error-message">{error}</p>}
-            {profile ? (
-                <div className="profile-container">
-                    <img
-                        src={profile.images?.[0]?.url || '/placeholder.png'}
-                        alt="Profile"
-                        className="profile-picture"
-                    />
-                    <h2>{profile.display_name || `${userId}`}</h2>
-                    <SpotifyProfileButton userId={userId} />
-                    <p><strong>Country:</strong> {profile.country || 'N/A'}</p>
-                    <p><strong>Subscription:</strong> {profile.product || 'N/A'}</p>
-                    <p><strong>Email:</strong> {profile.email || 'N/A'}</p>
-                    <p><strong>Followers:</strong> {profile.followers.total || 'N/A'}</p>
-                    <LogoutButton userId={userId} />
+            <div className="profile-layout">
+                <div className="profile-left">
+                    <h2 className="playlists-header">Your Playlists</h2>
+                    {playlists.length > 0 ? (
+                        <ul className="playlist-list">
+                            {playlists.map((playlist) => (
+                                <li key={playlist.id} className="playlist-item">
+                                    <img
+                                        src={playlist.images?.[0]?.url || '/placeholder.png'}
+                                        alt={playlist.name}
+                                        className="playlist-picture"
+                                    />
+                                    <div className="playlist-details">
+                                        <h3 className="playlist-name">{playlist.name}</h3>
+                                        <p className="playlist-tracks">Tracks: {playlist.tracks.total}</p>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="no-playlists-message">No playlists available.</p>
+                    )}
                 </div>
-            ) : (
-                <p>Loading profile...</p>
-            )}
+
+                <div className="profile-center">
+                    <h1>Your Profile</h1>
+                    {error && <p className="error-message">{error}</p>}
+                    {profile ? (
+                        <div className="profile-container">
+                            <img
+                                src={profile.images?.[0]?.url || '/placeholder.png'}
+                                alt="Profile"
+                                className="profile-picture"
+                            />
+                            <h2>{profile.display_name || `${userId}`}</h2>
+                            <SpotifyProfileButton userId={userId} />
+                            <p><strong>Country:</strong> {profile.country || 'N/A'}</p>
+                            <p><strong>Subscription:</strong> {profile.product || 'N/A'}</p>
+                            <p><strong>Email:</strong> {profile.email || 'N/A'}</p>
+                            <p><strong>Followers:</strong> {profile.followers.total || 'N/A'}</p>
+                            <LogoutButton userId={userId} />
+                        </div>
+                    ) : (
+                        <p>Loading profile...</p>
+                    )}
+                </div>
+
+                <div className="profile-right">
+                    <h2>Right Section</h2>
+                    <p>This space is empty for now.</p>
+                </div>
+            </div>
         </div>
     );
 };

@@ -30,6 +30,7 @@ import se.michaelthelin.spotify.requests.data.library.GetCurrentUsersSavedAlbums
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopTracksRequest;
 import se.michaelthelin.spotify.requests.data.player.GetCurrentUsersRecentlyPlayedTracksRequest;
 import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTrackRequest;
+import se.michaelthelin.spotify.requests.data.playlists.GetListOfCurrentUsersPlaylistsRequest;
 import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
 @RestController
@@ -57,7 +58,7 @@ public class SpotifyController {
 			SpotifyApi object = spotifyConfiguration.getSpotifyObject();
 
 			AuthorizationCodeUriRequest authorizationCodeUriRequest = object.authorizationCodeUri()
-					.scope("user-library-read user-read-email user-read-private user-top-read user-read-recently-played user-read-currently-playing")
+					.scope("user-library-read user-read-email user-read-private user-top-read user-read-recently-played user-read-currently-playing playlist-read-private")
 					.show_dialog(true)
 					.build();
 
@@ -283,7 +284,7 @@ public class SpotifyController {
 		return null;
 	}
 
-	@GetMapping(value = "user-profile")
+	@GetMapping(value = "current-user-profile")
 	public User getCurrentUserProfile(@RequestParam String userId) {
 		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
 		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
@@ -298,6 +299,27 @@ public class SpotifyController {
 			return user;
 		} catch (Exception e) {
 			System.out.println("Exception occurred while fetching user profile: " + e);
+		}
+		return null;
+	}
+
+	@GetMapping(value = "current-user-playlists")
+	public PlaylistSimplified[] getCurrentUserPlaylists(@RequestParam String userId) {
+		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
+		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
+		object.setAccessToken(userDetails.getAccessToken());
+		object.setRefreshToken(userDetails.getRefreshToken());
+
+		final GetListOfCurrentUsersPlaylistsRequest getListOfCurrentUsersPlaylistsRequest = object.getListOfCurrentUsersPlaylists()
+				.limit(50)
+				.offset(0)
+				.build();
+
+		try {
+			final Paging<PlaylistSimplified> playlistSimplifiedPaging = getListOfCurrentUsersPlaylistsRequest.execute();
+			return playlistSimplifiedPaging.getItems();
+		} catch (Exception e){
+			System.out.println("Exception occurred while fetching playlists: " + e);
 		}
 		return null;
 	}
