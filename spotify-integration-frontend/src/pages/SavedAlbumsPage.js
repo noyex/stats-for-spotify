@@ -40,7 +40,9 @@ const SavedAlbumsPage = () => {
           <Link to={`/home?id=${userId}`}>Home</Link>
           <Link to={`/top-songs-medium?id=${userId}`}>Top Songs</Link>
           <Link to={`/saved-albums?id=${userId}`}>Saved Albums</Link> 
-          <Link to={`/user-recently-played?id=${userId}`}>Recently Played</Link>         </nav>
+          <Link to={`/user-recently-played?id=${userId}`}>Recently Played</Link>  
+          <Link to={`/profile?id=${userId}`}>Profile</Link>       
+          </nav>
       )}
 
       <h1>Your Saved Albums</h1>

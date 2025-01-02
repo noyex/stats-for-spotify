@@ -14,10 +14,9 @@ import com.jts.stats_service.service.UserProfileService;
 import com.neovisionaries.i18n.CountryCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -67,6 +66,22 @@ public class SpotifyController {
 		} catch (Exception e) {
 			System.err.println("Error generating Spotify login URI: " + e.getMessage());
 			return "Error generating login link.";
+		}
+	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<Void> spotifyLogout(@RequestParam String userId) {
+		try {
+			UserDetails userDetails = userDetailsRepository.findByRefId(userId);
+			if (userDetails != null) {
+				userDetails.setAccessToken(null);
+				userDetails.setRefreshToken(null);
+				userDetailsRepository.save(userDetails);
+			}
+			return ResponseEntity.ok().build();
+		} catch (Exception e) {
+			System.out.println("Error logging out: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 

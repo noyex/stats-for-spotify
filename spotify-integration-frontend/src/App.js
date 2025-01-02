@@ -6,8 +6,8 @@ import TopSongsMedium from './pages/TopSongsMedium';
 import TopSongsShort from './pages/TopSongsShort';
 import TopSongsLong from './pages/TopSongsLong';
 import SavedAlbumsPage from './pages/SavedAlbumsPage';
-import PlaybackHistory from './pages/RecentlyPlayed';
 import RecentlyPlayed from './pages/RecentlyPlayed';
+import ProfilePage from './pages/ProfilePage';
 
 const App = () => {
   return (
@@ -20,6 +20,7 @@ const App = () => {
         <Route path="/top-songs-long" element={<TopSongsLong />} />
         <Route path="/saved-albums" element={<SavedAlbumsPage />} />
         <Route path="/user-recently-played" element={<RecentlyPlayed />} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Routes>
     </Router>
   );
