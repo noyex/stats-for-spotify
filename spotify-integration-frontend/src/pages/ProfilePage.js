@@ -52,11 +52,12 @@ const ProfilePage = () => {
                         alt="Profile"
                         className="profile-picture"
                     />
-                    <h2>{profile.display_name || 'N/A'}</h2>
+                    <h2>{profile.display_name || `${userId}`}</h2>
                     <SpotifyProfileButton userId={userId} />
                     <p><strong>Country:</strong> {profile.country || 'N/A'}</p>
                     <p><strong>Subscription:</strong> {profile.product || 'N/A'}</p>
                     <p><strong>Email:</strong> {profile.email || 'N/A'}</p>
+                    <p><strong>Followers:</strong> {profile.followers.total || 'N/A'}</p>
                     <LogoutButton userId={userId} />
                 </div>
             ) : (
