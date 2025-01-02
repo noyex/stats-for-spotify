@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { getUserSavedAlbums } from '../services/spotifyService';
 import '../styles/SavedAlbumsPage.css'; 
+import '../styles/Global.css'; 
 
 const SavedAlbumsPage = () => {
   const [albums, setAlbums] = useState([]);

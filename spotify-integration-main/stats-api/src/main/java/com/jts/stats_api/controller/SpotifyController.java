@@ -159,7 +159,7 @@ public class SpotifyController {
 		
 		final GetUsersTopTracksRequest getUsersTopTracksRequest = object.getUsersTopTracks()
 				.time_range("medium_term")
-				.limit(50)
+				.limit(48)
 				.offset(0)
 				.build();
 
@@ -184,7 +184,7 @@ public class SpotifyController {
 
 		final GetUsersTopTracksRequest getUsersTopTracksRequest = object.getUsersTopTracks()
 				.time_range("short_term")
-				.limit(50)
+				.limit(48)
 				.offset(0)
 				.build();
 
@@ -209,7 +209,7 @@ public class SpotifyController {
 
 		final GetUsersTopTracksRequest getUsersTopTracksRequest = object.getUsersTopTracks()
 				.time_range("long_term")
-				.limit(50)
+				.limit(48)
 				.offset(0)
 				.build();
 
@@ -237,7 +237,7 @@ public class SpotifyController {
 		object.setRefreshToken(userDetails.getRefreshToken());
 
 		final GetCurrentUsersRecentlyPlayedTracksRequest request = object.getCurrentUsersRecentlyPlayedTracks()
-				.limit(50)
+				.limit(48)
 				.before(new Date(System.currentTimeMillis()))
 				.build();
 

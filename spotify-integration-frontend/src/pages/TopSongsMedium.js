@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom'; 
 import { getUserTopTracksMedium } from '../services/spotifyService';
 import '../styles/TopSongs.css'; 
+import '../styles/Global.css'; 
+
 
 const TopSongs = () => {
   const [tracks, setTracks] = useState([]);

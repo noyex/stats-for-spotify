@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom'; 
 import { getUserRecentlyPlayed } from '../services/spotifyService';
 import '../styles/RecentlyPlayed.css';
+import '../styles/Global.css';
 
 const RecentlyPlayed = () => {
   const [tracks, setTracks] = useState([]);

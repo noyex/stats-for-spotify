@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import LogoutButton from '../components/LogoutButton';
 import { Link } from 'react-router-dom';
+import '../styles/Global.css';
+import '../styles/ProfilePage.css';
+
 
 const ProfilePage = () => {
     const [userId, setUserId] = useState(null);
