@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/HomePage.css'; 
+import '../styles/Global.css'; 
 
 const HomePage = () => {
   const [userId, setUserId] = useState(null);
