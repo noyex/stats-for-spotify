@@ -3,10 +3,13 @@ package com.jts.stats_api.controller;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Date;
+import java.util.List;
 
 import com.jts.stats_client.config.SpotifyConfiguration;
+import com.jts.stats_data.entity.PlaybackHistory;
 import com.jts.stats_data.entity.UserDetails;
 import com.jts.stats_data.entity.UserDetailsRepository;
+import com.jts.stats_service.service.RecentlyPlayedService;
 import com.jts.stats_service.service.UserProfileService;
 import com.neovisionaries.i18n.CountryCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +42,9 @@ public class SpotifyController {
 	
 	@Autowired
 	private UserProfileService userProfileService;
+
+	@Autowired
+	private RecentlyPlayedService recentlyPlayedService;
 
 	@Autowired
 	private SpotifyConfiguration spotifyConfiguration;
@@ -207,23 +213,32 @@ public class SpotifyController {
 	public PlayHistory[] getUserPlaybackHistory(@RequestParam String userId) {
 		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
 
-		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
+		if (userDetails == null) {
+			throw new IllegalArgumentException("User not found.");
+		}
 
+		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
 		object.setAccessToken(userDetails.getAccessToken());
 		object.setRefreshToken(userDetails.getRefreshToken());
 
-		final GetCurrentUsersRecentlyPlayedTracksRequest getCurrentUsersRecentlyPlayedTracksRequest = object.getCurrentUsersRecentlyPlayedTracks()
+		final GetCurrentUsersRecentlyPlayedTracksRequest request = object.getCurrentUsersRecentlyPlayedTracks()
 				.limit(50)
 				.before(new Date(System.currentTimeMillis()))
 				.build();
 
 		try {
-			final PagingCursorbased<PlayHistory> trackPaging = getCurrentUsersRecentlyPlayedTracksRequest.execute();
-			return trackPaging.getItems();
-		} catch (Exception e){
-			System.out.println("Exceprion occured while fetching songs: " + e);
+			final PagingCursorbased<PlayHistory> trackPaging = request.execute();
+			PlayHistory[] recentlyPlayedTracks = trackPaging.getItems();
+
+			List<PlaybackHistory> newHistory = recentlyPlayedService.mapRecentlyPlayedToPlaybackHistory(recentlyPlayedTracks);
+			recentlyPlayedService.updateAndFetchRecentlyPlayed(userDetails, newHistory);
+
+			return recentlyPlayedTracks;
+
+		} catch (Exception e) {
+			System.out.println("Exception occurred while fetching recently played tracks: " + e.getMessage());
+			throw new RuntimeException("Failed to fetch recently played tracks.", e);
 		}
-		return new PlayHistory[0];
 	}
 
 	@GetMapping(value = "user-currently-playing-track")
