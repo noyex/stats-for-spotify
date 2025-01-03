@@ -61,3 +61,11 @@ export const getCurrentUserPlaylists = async (userId) => {
   }
   return response.json();
 }
+
+export const getCurrentUserFollowedArtists = async (userId) => {
+  const response = await fetch(`/api/current-user-followed-artists?userId=${userId}`);
+  if(!response.ok){
+    throw new Error(`Failed to fetch current user's followed artists`)
+  }
+  return response.json();
+}

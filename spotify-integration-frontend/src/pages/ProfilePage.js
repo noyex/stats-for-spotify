@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import LogoutButton from '../components/LogoutButton';
 import SpotifyProfileButton from '../components/SpotifyProfileButton';
 import { Link } from 'react-router-dom';
-import { getCurrentUserProfile, getCurrentUserPlaylists } from '../services/spotifyService';
+import { getCurrentUserProfile, getCurrentUserPlaylists, getCurrentUserFollowedArtists } from '../services/spotifyService';
 import '../styles/Global.css';
 import '../styles/ProfilePage.css';
 
@@ -10,6 +10,7 @@ const ProfilePage = () => {
     const [userId, setUserId] = useState(null);
     const [profile, setProfile] = useState(null);
     const [playlists, setPlaylists] = useState([]);
+    const [artists, setArtists] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -19,6 +20,7 @@ const ProfilePage = () => {
             setUserId(id);
             fetchUserProfile(id);
             fetchUserPlaylists(id);
+            fetchUserFollowedArtists(id);
         }
     }, []);
 
@@ -38,6 +40,16 @@ const ProfilePage = () => {
             setPlaylists(data);
         } catch (err) {
             setError("Failed to load playlists.");
+            console.error(err);
+        }
+    };
+
+    const fetchUserFollowedArtists = async (id) => {
+        try {
+            const data = await getCurrentUserFollowedArtists(id);
+            setArtists(data);
+        } catch(err){
+            setError("Failed to load artists.");
             console.error(err);
         }
     };
@@ -103,8 +115,25 @@ const ProfilePage = () => {
                 </div>
 
                 <div className="profile-right">
-                    <h2>Right Section</h2>
-                    <p>This space is empty for now.</p>
+                    <h2 className='artists-header'>Followed Artists</h2>
+                    {artists.length > 0 ? (
+                        <ul className="artists-list">
+                            {artists.map((artist) => (
+                                <li key={artist.id} className="artists-item">
+                                    <img
+                                        src={artist.images?.[0]?.url || '/placeholder.png'}
+                                        alt={artist.name}
+                                        className="artists-picture"
+                                    />
+                                    <div className="artists-details">
+                                        <h3 className="artists-name">{artist.name}</h3>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="no-artists-message">No artists available.</p>
+                    )}
                 </div>
             </div>
         </div>
