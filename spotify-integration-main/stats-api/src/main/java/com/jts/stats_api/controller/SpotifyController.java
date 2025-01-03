@@ -5,6 +5,7 @@ import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
+import com.jts.stats_api.service.ControllerService;
 import com.jts.stats_client.config.SpotifyConfiguration;
 import com.jts.stats_data.entity.*;
 import com.jts.stats_data.repositories.PlaylistsRepository;
@@ -55,10 +56,11 @@ public class SpotifyController {
 	@Autowired
 	private UserDetailsRepository userDetailsRepository;
 
-	@Autowired
-	private PlaylistsRepository playlistsRepository;
     @Autowired
     private PlaylistsService playlistsService;
+
+	@Autowired
+	private ControllerService controllerService;
 
 	@GetMapping("/login")
 	public String spotifyLogin() {
@@ -136,13 +138,9 @@ public class SpotifyController {
 	
 	@GetMapping(value = "user-saved-album")
 	public SavedAlbum[] getCurrentUserSavedAlbum(@RequestParam String userId) {
-		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
-
-		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
-		object.setAccessToken(userDetails.getAccessToken());
-		object.setRefreshToken(userDetails.getRefreshToken());
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 		
-		final GetCurrentUsersSavedAlbumsRequest getUsersTopArtistsRequest = object.getCurrentUsersSavedAlbums()
+		final GetCurrentUsersSavedAlbumsRequest getUsersTopArtistsRequest = spotifyApi.getCurrentUsersSavedAlbums()
 				.limit(50)
 				.offset(0)
 				.build();
@@ -160,13 +158,9 @@ public class SpotifyController {
 
 	@GetMapping(value = "user-top-songs-medium")
 	public Track[] getUserTopTracksMedium(@RequestParam String userId) {
-		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 		
-		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
-		object.setAccessToken(userDetails.getAccessToken());
-		object.setRefreshToken(userDetails.getRefreshToken());
-		
-		final GetUsersTopTracksRequest getUsersTopTracksRequest = object.getUsersTopTracks()
+		final GetUsersTopTracksRequest getUsersTopTracksRequest = spotifyApi.getUsersTopTracks()
 				.time_range("medium_term")
 				.limit(48)
 				.offset(0)
@@ -185,13 +179,9 @@ public class SpotifyController {
 
 	@GetMapping(value = "user-top-songs-short")
 	public Track[] getUserTopTracksShort(@RequestParam String userId) {
-		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 
-		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
-		object.setAccessToken(userDetails.getAccessToken());
-		object.setRefreshToken(userDetails.getRefreshToken());
-
-		final GetUsersTopTracksRequest getUsersTopTracksRequest = object.getUsersTopTracks()
+		final GetUsersTopTracksRequest getUsersTopTracksRequest = spotifyApi.getUsersTopTracks()
 				.time_range("short_term")
 				.limit(48)
 				.offset(0)
@@ -210,12 +200,9 @@ public class SpotifyController {
 
 	@GetMapping(value = "user-top-songs-Long")
 	public Track[] getUserTopTracksLong(@RequestParam String userId) {
-		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
-		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
-		object.setAccessToken(userDetails.getAccessToken());
-		object.setRefreshToken(userDetails.getRefreshToken());
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 
-		final GetUsersTopTracksRequest getUsersTopTracksRequest = object.getUsersTopTracks()
+		final GetUsersTopTracksRequest getUsersTopTracksRequest = spotifyApi.getUsersTopTracks()
 				.time_range("long_term")
 				.limit(48)
 				.offset(0)
@@ -234,17 +221,10 @@ public class SpotifyController {
 
 	@GetMapping(value = "user-recently-played")
 	public PlayHistory[] getUserPlaybackHistory(@RequestParam String userId) {
-		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
+		UserDetails userDetails = controllerService.getUserDetails(userId);
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 
-		if (userDetails == null) {
-			throw new IllegalArgumentException("User not found.");
-		}
-
-		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
-		object.setAccessToken(userDetails.getAccessToken());
-		object.setRefreshToken(userDetails.getRefreshToken());
-
-		final GetCurrentUsersRecentlyPlayedTracksRequest request = object.getCurrentUsersRecentlyPlayedTracks()
+		final GetCurrentUsersRecentlyPlayedTracksRequest request = spotifyApi.getCurrentUsersRecentlyPlayedTracks()
 				.limit(48)
 				.before(new Date(System.currentTimeMillis()))
 				.build();
@@ -266,17 +246,9 @@ public class SpotifyController {
 
 	@GetMapping(value = "user-currently-playing-track")
 	public CurrentlyPlaying getUserCurrentlyPlayingTrack(@RequestParam String userId) {
-		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 
-		if (userDetails == null) {
-			throw new IllegalArgumentException("User not found.");
-		}
-
-		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
-		object.setAccessToken(userDetails.getAccessToken());
-		object.setRefreshToken(userDetails.getRefreshToken());
-
-		final GetUsersCurrentlyPlayingTrackRequest currentlyPlayingTrackRequest = object.getUsersCurrentlyPlayingTrack()
+		final GetUsersCurrentlyPlayingTrackRequest currentlyPlayingTrackRequest = spotifyApi.getUsersCurrentlyPlayingTrack()
 				.market(CountryCode.PL)
 				.additionalTypes("track")
 				.build();
@@ -299,17 +271,9 @@ public class SpotifyController {
 
 	@GetMapping(value = "current-user-profile")
 	public User getCurrentUserProfile(@RequestParam String userId) {
-		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 
-		if (userDetails == null) {
-			throw new IllegalArgumentException("User not found.");
-		}
-
-		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
-		object.setAccessToken(userDetails.getAccessToken());
-		object.setRefreshToken(userDetails.getRefreshToken());
-
-		final GetCurrentUsersProfileRequest getCurrentUsersProfileRequest = object.getCurrentUsersProfile()
+		final GetCurrentUsersProfileRequest getCurrentUsersProfileRequest = spotifyApi.getCurrentUsersProfile()
 				.build();
 		try {
 			final User user = getCurrentUsersProfileRequest.execute();
@@ -323,17 +287,9 @@ public class SpotifyController {
 
 	@GetMapping(value = "current-user-playlists")
 	public PlaylistSimplified[] getCurrentUserPlaylists(@RequestParam String userId) {
-		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
-
-		if (userDetails == null) {
-			throw new IllegalArgumentException("User not found.");
-		}
-
-		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
-		object.setAccessToken(userDetails.getAccessToken());
-		object.setRefreshToken(userDetails.getRefreshToken());
-
-		final GetListOfCurrentUsersPlaylistsRequest request = object.getListOfCurrentUsersPlaylists()
+		UserDetails userDetails = controllerService.getUserDetails(userId);
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+		final GetListOfCurrentUsersPlaylistsRequest request = spotifyApi.getListOfCurrentUsersPlaylists()
 				.limit(50)
 				.offset(0)
 				.build();
@@ -353,16 +309,10 @@ public class SpotifyController {
 
 	@GetMapping(value = "current-user-followed-artists")
 	public Artist[] getCurrentUserFollowedArtists(@RequestParam String userId) {
-		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
-		if (userDetails == null) {
-			throw new IllegalArgumentException("User not found.");
-		}
-		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
-		object.setAccessToken(userDetails.getAccessToken());
-		object.setRefreshToken(userDetails.getRefreshToken());
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 		final ModelObjectType type = ModelObjectType.ARTIST;
 
-		final GetUsersFollowedArtistsRequest request = object.getUsersFollowedArtists(type)
+		final GetUsersFollowedArtistsRequest request = spotifyApi.getUsersFollowedArtists(type)
 				.limit(50)
 				.build();
 		try {

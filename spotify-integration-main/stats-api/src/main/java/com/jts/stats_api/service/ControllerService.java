@@ -6,9 +6,10 @@ import com.jts.stats_data.entity.UserDetails;
 import com.jts.stats_data.repositories.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.SpotifyApi;
 
-@Component
+@Service
 public class ControllerService {
 
     @Autowired
@@ -17,7 +18,7 @@ public class ControllerService {
     @Autowired
     private SpotifyConfiguration spotifyConfiguration;
 
-    protected SpotifyApi getSpotifyApiForUser(String userId) {
+    public SpotifyApi getSpotifyApiForUser(String userId) {
         UserDetails userDetails = userDetailsRepository.findByRefId(userId);
 
         if (userDetails == null) {
@@ -29,5 +30,14 @@ public class ControllerService {
         spotifyApi.setRefreshToken(userDetails.getRefreshToken());
 
         return spotifyApi;
+    }
+
+    public UserDetails getUserDetails(String userId) {
+        UserDetails userDetails = userDetailsRepository.findByRefId(userId);
+
+        if (userDetails == null) {
+            throw new IllegalArgumentException("User not found.");
+        }
+        return userDetails;
     }
 }
