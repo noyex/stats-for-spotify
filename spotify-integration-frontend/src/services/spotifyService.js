@@ -69,3 +69,11 @@ export const getCurrentUserFollowedArtists = async (userId) => {
   }
   return response.json();
 }
+
+export const getCurrentUserSavedTracks = async (userId) => {
+  const response = await fetch(`/api/current-user-saved-tracks?userId=${userId}`);
+  if(!response.ok){
+    throw new Error(`Failed to fetch current user's saved tracks`)
+  }
+  return response.json();
+}

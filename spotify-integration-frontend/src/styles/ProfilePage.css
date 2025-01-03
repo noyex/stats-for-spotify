@@ -266,19 +266,80 @@ p {
     margin: 0;
 }
 
-.liked-tracks-right {
+.saved-tracks-right {
     flex: 1;
     background-color: rgba(0, 0, 0, 0.8);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     text-align: center;
+    max-height: 600px;
+    overflow-y: auto;
 }
 
-.liked-tracks-right h2 {
+.saved-tracks-right h2 {
     font-size: 1.5rem;
     color: #1db954;
     margin-bottom: 15px;
+}
+
+.track-list-profile {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.track-item-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.track-item-profile:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.track-image-profile {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.track-details-profile {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.track-name-profile {
+    font-size: 1.2rem;
+    color: #fff;
+    margin: 0;
+    font-weight: bold;
+}
+
+.track-artist-profile,
+.track-album-profile {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin: 0;
+}
+
+.no-tracks-message {
+    text-align: center;
+    color: #ccc;
+    font-size: 1.2rem;
+    margin-top: 20px;
 }
 
 .no-albums-message {

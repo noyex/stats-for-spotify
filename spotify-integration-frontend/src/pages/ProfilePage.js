@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import LogoutButton from '../components/LogoutButton';
 import SpotifyProfileButton from '../components/SpotifyProfileButton';
 import { Link } from 'react-router-dom';
-import { getCurrentUserProfile, getCurrentUserPlaylists, getCurrentUserFollowedArtists, getUserSavedAlbums } from '../services/spotifyService';
+import { getCurrentUserProfile, getCurrentUserPlaylists, getCurrentUserFollowedArtists, getUserSavedAlbums, getCurrentUserSavedTracks } from '../services/spotifyService';
 import '../styles/Global.css';
 import '../styles/ProfilePage.css';
 
@@ -12,6 +12,7 @@ const ProfilePage = () => {
     const [playlists, setPlaylists] = useState([]);
     const [artists, setArtists] = useState([]);
     const [albums, setAlbums] = useState([]);
+    const [tracks, setTracks] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -23,6 +24,7 @@ const ProfilePage = () => {
             fetchUserPlaylists(id);
             fetchUserFollowedArtists(id);
             fetchUserSavedAlbums(id);
+            fetchUserSavedTracks(id);
         }
     }, []);
 
@@ -65,6 +67,16 @@ const ProfilePage = () => {
             console.error(err);
         }
     };
+
+    const fetchUserSavedTracks = async (id) => {
+        try {
+            const data = await getCurrentUserSavedTracks(id);
+            setTracks(data);
+        } catch (err) {
+            setError("Failed to load saved tracks.");
+            console.error(err);
+        }
+    }
 
     return (
         <div className="profile-page">
@@ -176,9 +188,32 @@ const ProfilePage = () => {
                         <p className="no-albums-message">No saved albums available.</p>
                     )}
                 </div>
-                <div className="liked-tracks-right">
-                    <h2>Liked Tracks</h2>
-                    <p>This section is empty for now.</p>
+                <div className="saved-tracks-right">
+                    <h2>Saved Tracks</h2>
+                    {tracks.length > 0 ? (
+                        <ul className="track-list-profile">
+                            {tracks.map((item, index) => {
+                                const track = item.track;
+                                const artistNames = track.artists.map((artist) => artist.name).join(", ");
+                                return (
+                                    <li key={index} className="track-item-profile">
+                                        <img
+                                            src={track.album?.images?.[0]?.url || '/placeholder.png'}
+                                            alt={track.name}
+                                            className="track-image-profile"
+                                        />
+                                        <div className="track-details-profile">
+                                            <p className="album-name">{track.name}</p>
+                                            <p className="track-artist-profile">Artists: {artistNames}</p>
+                                            <p className="track-album-profile">Album: {track.album.name}</p>
+                                        </div>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    ) : (
+                        <p className="no-tracks-message">No saved tracks available.</p>
+                    )}
                 </div>
             </div>
         </div>

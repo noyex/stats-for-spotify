@@ -52,7 +52,7 @@ public class TracksService {
                         && newItem.getAlbumName().equals(existing.getAlbumName())
                         && newItem.getArtistName().equals(existing.getArtistName())))
                 .toList();
-        tracksRepository.deleteAll(existingTracks);
+        tracksRepository.deleteAll(toRemove);
 
         for (Tracks newItem : newTracks) {
             boolean exists = existingTracks.stream()

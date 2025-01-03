@@ -53,7 +53,7 @@ const HomePage = () => {
               className="album-cover"
             />
           )}
-          <div className="track-details">
+          <div className="track-details-home">
             <h2>Currently Playing</h2>
             <p>
               <strong>{currentTrack.item.name}</strong> by{' '}
