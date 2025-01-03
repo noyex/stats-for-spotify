@@ -65,6 +65,8 @@ public class SpotifyController {
     private ArtistsService artistsService;
     @Autowired
     private AlbumService albumService;
+    @Autowired
+    private TracksService tracksService;
 
 	@GetMapping("/login")
 	public String spotifyLogin() {
@@ -350,6 +352,9 @@ public class SpotifyController {
 		try {
 			final Paging<SavedTrack> trackPaging = request.execute();
 			SavedTrack[] savedTracks = trackPaging.getItems();
+
+			List<Tracks> newTracks = tracksService.trackMapper(savedTracks);
+			tracksService.updateAndFetchTracks(userDetails, newTracks);
 			return savedTracks;
 		} catch (Exception e){
 			System.out.println("Exception occurred while fetching tracks: " + e);
