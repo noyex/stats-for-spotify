@@ -2,12 +2,13 @@ package com.jts.stats_api.controller;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.jts.stats_client.config.SpotifyConfiguration;
 import com.jts.stats_data.entity.*;
+import com.jts.stats_data.repositories.PlaylistsRepository;
+import com.jts.stats_data.repositories.UserDetailsRepository;
 import com.jts.stats_service.service.PlaylistsService;
 import com.jts.stats_service.service.RecentlyPlayedService;
 import com.jts.stats_service.service.UserProfileService;
@@ -21,11 +22,13 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletResponse;
 import se.michaelthelin.spotify.SpotifyApi;
+import se.michaelthelin.spotify.enums.ModelObjectType;
 import se.michaelthelin.spotify.model_objects.credentials.AuthorizationCodeCredentials;
 import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlaying;
 import se.michaelthelin.spotify.model_objects.specification.*;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
+import se.michaelthelin.spotify.requests.data.follow.GetUsersFollowedArtistsRequest;
 import se.michaelthelin.spotify.requests.data.library.GetCurrentUsersSavedAlbumsRequest;
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopTracksRequest;
 import se.michaelthelin.spotify.requests.data.player.GetCurrentUsersRecentlyPlayedTracksRequest;
@@ -63,7 +66,7 @@ public class SpotifyController {
 			SpotifyApi object = spotifyConfiguration.getSpotifyObject();
 
 			AuthorizationCodeUriRequest authorizationCodeUriRequest = object.authorizationCodeUri()
-					.scope("user-library-read user-read-email user-read-private user-top-read user-read-recently-played user-read-currently-playing playlist-read-private")
+					.scope("user-library-read user-read-email user-read-private user-top-read user-read-recently-played user-read-currently-playing playlist-read-private user-follow-read")
 					.show_dialog(true)
 					.build();
 
@@ -264,6 +267,11 @@ public class SpotifyController {
 	@GetMapping(value = "user-currently-playing-track")
 	public CurrentlyPlaying getUserCurrentlyPlayingTrack(@RequestParam String userId) {
 		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
+
+		if (userDetails == null) {
+			throw new IllegalArgumentException("User not found.");
+		}
+
 		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
 		object.setAccessToken(userDetails.getAccessToken());
 		object.setRefreshToken(userDetails.getRefreshToken());
@@ -292,6 +300,11 @@ public class SpotifyController {
 	@GetMapping(value = "current-user-profile")
 	public User getCurrentUserProfile(@RequestParam String userId) {
 		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
+
+		if (userDetails == null) {
+			throw new IllegalArgumentException("User not found.");
+		}
+
 		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
 		object.setAccessToken(userDetails.getAccessToken());
 		object.setRefreshToken(userDetails.getRefreshToken());
@@ -311,6 +324,11 @@ public class SpotifyController {
 	@GetMapping(value = "current-user-playlists")
 	public PlaylistSimplified[] getCurrentUserPlaylists(@RequestParam String userId) {
 		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
+
+		if (userDetails == null) {
+			throw new IllegalArgumentException("User not found.");
+		}
+
 		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
 		object.setAccessToken(userDetails.getAccessToken());
 		object.setRefreshToken(userDetails.getRefreshToken());
@@ -329,6 +347,29 @@ public class SpotifyController {
 			return playlists;
 		} catch (Exception e){
 			System.out.println("Exception occurred while fetching playlists: " + e);
+		}
+		return null;
+	}
+
+	@GetMapping(value = "current-user-followed-artists")
+	public Artist[] getCurrentUserFollowedArtists(@RequestParam String userId) {
+		UserDetails userDetails = userDetailsRepository.findByRefId(userId);
+		if (userDetails == null) {
+			throw new IllegalArgumentException("User not found.");
+		}
+		SpotifyApi object = spotifyConfiguration.getSpotifyObject();
+		object.setAccessToken(userDetails.getAccessToken());
+		object.setRefreshToken(userDetails.getRefreshToken());
+		final ModelObjectType type = ModelObjectType.ARTIST;
+
+		final GetUsersFollowedArtistsRequest request = object.getUsersFollowedArtists(type)
+				.limit(50)
+				.build();
+		try {
+			final PagingCursorbased<Artist> artistPagingCursorbased = request.execute();
+			return artistPagingCursorbased.getItems();
+		} catch (Exception e) {
+			System.out.println("Exception occurred while fetching artists: " + e);
 		}
 		return null;
 	}

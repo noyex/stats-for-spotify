@@ -1,8 +1,8 @@
-package com.jts.stats_data.entity;
+package com.jts.stats_data.repositories;
 
+import com.jts.stats_data.entity.Playlists;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import se.michaelthelin.spotify.model_objects.specification.Playlist;
 
 import java.util.List;
 

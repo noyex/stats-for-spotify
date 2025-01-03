@@ -1,12 +1,12 @@
 package com.jts.stats_service.service;
 
 import com.jts.stats_data.entity.*;
+import com.jts.stats_data.repositories.PlaylistsRepository;
+import com.jts.stats_data.repositories.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.michaelthelin.spotify.model_objects.specification.Playlist;
 import se.michaelthelin.spotify.model_objects.specification.PlaylistSimplified;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

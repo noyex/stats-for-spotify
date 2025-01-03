@@ -2,16 +2,14 @@ package com.jts.stats_service.service;
 
 
 import com.jts.stats_data.entity.PlaybackHistory;
-import com.jts.stats_data.entity.PlaybackHistoryRepository;
+import com.jts.stats_data.repositories.PlaybackHistoryRepository;
 import com.jts.stats_data.entity.UserDetails;
-import com.jts.stats_data.entity.UserDetailsRepository;
+import com.jts.stats_data.repositories.UserDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.michaelthelin.spotify.model_objects.specification.PlayHistory;
-import se.michaelthelin.spotify.model_objects.specification.User;
 
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
