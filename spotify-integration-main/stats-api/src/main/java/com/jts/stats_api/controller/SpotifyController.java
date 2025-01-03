@@ -30,6 +30,7 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
 import se.michaelthelin.spotify.requests.data.follow.GetUsersFollowedArtistsRequest;
 import se.michaelthelin.spotify.requests.data.library.GetCurrentUsersSavedAlbumsRequest;
+import se.michaelthelin.spotify.requests.data.library.GetUsersSavedTracksRequest;
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopTracksRequest;
 import se.michaelthelin.spotify.requests.data.player.GetCurrentUsersRecentlyPlayedTracksRequest;
 import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTrackRequest;
@@ -332,6 +333,26 @@ public class SpotifyController {
 			return artists;
 		} catch (Exception e) {
 			System.out.println("Exception occurred while fetching artists: " + e);
+		}
+		return null;
+	}
+
+	@GetMapping(value = "current-user-saved-tracks")
+	public SavedTrack[] getCurrentUserSavedTracks(@RequestParam String userId) {
+		UserDetails userDetails = controllerService.getUserDetails(userId);
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+
+		final GetUsersSavedTracksRequest request = spotifyApi.getUsersSavedTracks()
+				.limit(50)
+				.market(CountryCode.PL)
+				.build();
+
+		try {
+			final Paging<SavedTrack> trackPaging = request.execute();
+			SavedTrack[] savedTracks = trackPaging.getItems();
+			return savedTracks;
+		} catch (Exception e){
+			System.out.println("Exception occurred while fetching tracks: " + e);
 		}
 		return null;
 	}
