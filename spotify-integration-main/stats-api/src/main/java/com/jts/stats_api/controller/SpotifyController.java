@@ -2,13 +2,13 @@ package com.jts.stats_api.controller;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.jts.stats_client.config.SpotifyConfiguration;
-import com.jts.stats_data.entity.PlaybackHistory;
-import com.jts.stats_data.entity.UserDetails;
-import com.jts.stats_data.entity.UserDetailsRepository;
+import com.jts.stats_data.entity.*;
+import com.jts.stats_service.service.PlaylistsService;
 import com.jts.stats_service.service.RecentlyPlayedService;
 import com.jts.stats_service.service.UserProfileService;
 import com.neovisionaries.i18n.CountryCode;
@@ -51,7 +51,12 @@ public class SpotifyController {
 	
 	@Autowired
 	private UserDetailsRepository userDetailsRepository;
-	
+
+	@Autowired
+	private PlaylistsRepository playlistsRepository;
+    @Autowired
+    private PlaylistsService playlistsService;
+
 	@GetMapping("/login")
 	public String spotifyLogin() {
 		try {
@@ -310,14 +315,18 @@ public class SpotifyController {
 		object.setAccessToken(userDetails.getAccessToken());
 		object.setRefreshToken(userDetails.getRefreshToken());
 
-		final GetListOfCurrentUsersPlaylistsRequest getListOfCurrentUsersPlaylistsRequest = object.getListOfCurrentUsersPlaylists()
+		final GetListOfCurrentUsersPlaylistsRequest request = object.getListOfCurrentUsersPlaylists()
 				.limit(50)
 				.offset(0)
 				.build();
 
 		try {
-			final Paging<PlaylistSimplified> playlistSimplifiedPaging = getListOfCurrentUsersPlaylistsRequest.execute();
-			return playlistSimplifiedPaging.getItems();
+			final Paging<PlaylistSimplified> playlistSimplifiedPaging = request.execute();
+			PlaylistSimplified[] playlists = playlistSimplifiedPaging.getItems();
+
+			List<Playlists> newPlaylists = playlistsService.playlistMapper(playlists);
+			playlistsService.updateAndFetchPlaylists(userDetails, newPlaylists);
+			return playlists;
 		} catch (Exception e){
 			System.out.println("Exception occurred while fetching playlists: " + e);
 		}
