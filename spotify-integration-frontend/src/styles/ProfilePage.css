@@ -185,6 +185,107 @@ p {
     margin: 0;
 }
 
+.bottom-layout {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.saved-albums-left {
+    flex: 1;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    overflow-y: auto;
+    max-height: 600px;
+}
+
+.saved-albums-left h2 {
+    font-size: 1.5rem;
+    color: #1db954;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.albums-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.album-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.album-item:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.album-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.album-details {
+    display: flex;
+    flex-direction:column;
+}
+
+.album-name {
+    font-size: 1.2rem;
+    color: #fff;
+    margin: 0;
+    font-weight: bold;
+}
+
+.album-tracks {
+    font-size: 1rem;
+    color: #ccc;
+    margin: 5px 0;
+}
+
+.album-artist {
+    font-size: 1rem;
+    color: #ccc;
+    margin: 0;
+}
+
+.liked-tracks-right {
+    flex: 1;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+.liked-tracks-right h2 {
+    font-size: 1.5rem;
+    color: #1db954;
+    margin-bottom: 15px;
+}
+
+.no-albums-message {
+    text-align: center;
+    color: #ccc;
+    font-size: 1.2rem;
+}
 .logout-button, .spotify-profile-button {
     background-color: #1db954;
     border: none;

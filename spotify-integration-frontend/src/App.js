@@ -5,7 +5,6 @@ import HomePage from './pages/HomePage';
 import TopSongsMedium from './pages/TopSongsMedium';
 import TopSongsShort from './pages/TopSongsShort';
 import TopSongsLong from './pages/TopSongsLong';
-import SavedAlbumsPage from './pages/SavedAlbumsPage';
 import RecentlyPlayed from './pages/RecentlyPlayed';
 import ProfilePage from './pages/ProfilePage';
 
@@ -18,7 +17,6 @@ const App = () => {
         <Route path="/top-songs-medium" element={<TopSongsMedium />} />
         <Route path="/top-songs-short" element={<TopSongsShort />} />
         <Route path="/top-songs-long" element={<TopSongsLong />} />
-        <Route path="/saved-albums" element={<SavedAlbumsPage />} />
         <Route path="/user-recently-played" element={<RecentlyPlayed />} />
         <Route path="/profile" element={<ProfilePage />} />
       </Routes>

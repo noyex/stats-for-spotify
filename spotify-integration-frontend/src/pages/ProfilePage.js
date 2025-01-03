@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import LogoutButton from '../components/LogoutButton';
 import SpotifyProfileButton from '../components/SpotifyProfileButton';
 import { Link } from 'react-router-dom';
-import { getCurrentUserProfile, getCurrentUserPlaylists, getCurrentUserFollowedArtists } from '../services/spotifyService';
+import { getCurrentUserProfile, getCurrentUserPlaylists, getCurrentUserFollowedArtists, getUserSavedAlbums } from '../services/spotifyService';
 import '../styles/Global.css';
 import '../styles/ProfilePage.css';
 
@@ -11,6 +11,7 @@ const ProfilePage = () => {
     const [profile, setProfile] = useState(null);
     const [playlists, setPlaylists] = useState([]);
     const [artists, setArtists] = useState([]);
+    const [albums, setAlbums] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -21,6 +22,7 @@ const ProfilePage = () => {
             fetchUserProfile(id);
             fetchUserPlaylists(id);
             fetchUserFollowedArtists(id);
+            fetchUserSavedAlbums(id);
         }
     }, []);
 
@@ -48,8 +50,18 @@ const ProfilePage = () => {
         try {
             const data = await getCurrentUserFollowedArtists(id);
             setArtists(data);
-        } catch(err){
+        } catch (err) {
             setError("Failed to load artists.");
+            console.error(err);
+        }
+    };
+
+    const fetchUserSavedAlbums = async (id) => {
+        try {
+            const data = await getUserSavedAlbums(id);
+            setAlbums(data);
+        } catch (err) {
+            setError("Failed to load saved albums.");
             console.error(err);
         }
     };
@@ -61,8 +73,7 @@ const ProfilePage = () => {
                     <>
                         <Link to={`/home?id=${userId}`}>Home</Link>
                         <Link to={`/top-songs-medium?id=${userId}`}>Top Songs</Link>
-                        <Link to={`/saved-albums?id=${userId}`}>Saved Albums</Link>
-                        <Link to={`/user-recently-played?id=${userId}`}>Playback History</Link>
+                        <Link to={`/user-recently-played?id=${userId}`}>Recently Played</Link>
                         <Link to={`/profile?id=${userId}`}>Profile</Link>
                     </>
                 )}
@@ -115,7 +126,7 @@ const ProfilePage = () => {
                 </div>
 
                 <div className="profile-right">
-                    <h2 className='artists-header'>Followed Artists</h2>
+                    <h2 className="artists-header">Followed Artists</h2>
                     {artists.length > 0 ? (
                         <ul className="artists-list">
                             {artists.map((artist) => (
@@ -134,6 +145,40 @@ const ProfilePage = () => {
                     ) : (
                         <p className="no-artists-message">No artists available.</p>
                     )}
+                </div>
+            </div>
+
+            <div className="bottom-layout">
+                <div className="saved-albums-left">
+                    <h2>Your Saved Albums</h2>
+                    {albums.length > 0 ? (
+                        <ul className="albums-list">
+                            {albums.map((item, index) => {
+                                const album = item.album;
+                                const artistNames = album.artists.map((artist) => artist.name).join(", ");
+                                return (
+                                    <li key={index} className="album-item">
+                                        <img
+                                            src={album.images?.[0]?.url || '/placeholder.png'}
+                                            alt={album.name}
+                                            className="album-image"
+                                        />
+                                        <div className="album-details">
+                                            <p className="album-name">{album.name}</p>
+                                            <p className="album-tracks">Tracks: {album.tracks.total}</p>
+                                            <p className="album-artist">Artists: {artistNames}</p>
+                                        </div>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    ) : (
+                        <p className="no-albums-message">No saved albums available.</p>
+                    )}
+                </div>
+                <div className="liked-tracks-right">
+                    <h2>Liked Tracks</h2>
+                    <p>This section is empty for now.</p>
                 </div>
             </div>
         </div>
