@@ -2,6 +2,7 @@ package com.jts.stats_api.controller;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import com.jts.stats_client.config.SpotifyConfiguration;
 import com.jts.stats_data.entity.*;
 import com.jts.stats_data.repositories.PlaylistsRepository;
 import com.jts.stats_data.repositories.UserDetailsRepository;
+import com.jts.stats_service.service.ArtistsService;
 import com.jts.stats_service.service.PlaylistsService;
 import com.jts.stats_service.service.RecentlyPlayedService;
 import com.jts.stats_service.service.UserProfileService;
@@ -61,6 +63,8 @@ public class SpotifyController {
 
 	@Autowired
 	private ControllerService controllerService;
+    @Autowired
+    private ArtistsService artistsService;
 
 	@GetMapping("/login")
 	public String spotifyLogin() {
@@ -309,6 +313,7 @@ public class SpotifyController {
 
 	@GetMapping(value = "current-user-followed-artists")
 	public Artist[] getCurrentUserFollowedArtists(@RequestParam String userId) {
+		UserDetails userDetails = controllerService.getUserDetails(userId);
 		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 		final ModelObjectType type = ModelObjectType.ARTIST;
 
@@ -317,7 +322,11 @@ public class SpotifyController {
 				.build();
 		try {
 			final PagingCursorbased<Artist> artistPagingCursorbased = request.execute();
-			return artistPagingCursorbased.getItems();
+			Artist[] artists = artistPagingCursorbased.getItems();
+
+			List<Artists> newArtists = artistsService.artistMapper(artists);
+			artistsService.updateAndFetchArtists(userDetails, newArtists);
+			return artists;
 		} catch (Exception e) {
 			System.out.println("Exception occurred while fetching artists: " + e);
 		}
