@@ -11,10 +11,7 @@ import com.jts.stats_client.config.SpotifyConfiguration;
 import com.jts.stats_data.entity.*;
 import com.jts.stats_data.repositories.PlaylistsRepository;
 import com.jts.stats_data.repositories.UserDetailsRepository;
-import com.jts.stats_service.service.ArtistsService;
-import com.jts.stats_service.service.PlaylistsService;
-import com.jts.stats_service.service.RecentlyPlayedService;
-import com.jts.stats_service.service.UserProfileService;
+import com.jts.stats_service.service.*;
 import com.neovisionaries.i18n.CountryCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,6 +62,8 @@ public class SpotifyController {
 	private ControllerService controllerService;
     @Autowired
     private ArtistsService artistsService;
+    @Autowired
+    private AlbumService albumService;
 
 	@GetMapping("/login")
 	public String spotifyLogin() {
@@ -142,6 +141,7 @@ public class SpotifyController {
 	
 	@GetMapping(value = "user-saved-album")
 	public SavedAlbum[] getCurrentUserSavedAlbum(@RequestParam String userId) {
+		UserDetails userDetails = controllerService.getUserDetails(userId);
 		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 		
 		final GetCurrentUsersSavedAlbumsRequest getUsersTopArtistsRequest = spotifyApi.getCurrentUsersSavedAlbums()
@@ -151,8 +151,11 @@ public class SpotifyController {
 
 		try {
 			final Paging<SavedAlbum> artistPaging = getUsersTopArtistsRequest.execute();
+			SavedAlbum[] savedAlbums = artistPaging.getItems();
 
-			return artistPaging.getItems();
+			List<Albums> newAlbums = albumService.albumMapper(savedAlbums);
+			albumService.updateAndFetchAlbums(userDetails, newAlbums);
+			return savedAlbums;
 		} catch (Exception e) {
 			System.out.println("Exception occured while fetching user saved album: " + e);
 		}
