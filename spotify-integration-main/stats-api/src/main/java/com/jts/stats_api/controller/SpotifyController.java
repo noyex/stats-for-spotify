@@ -74,7 +74,7 @@ public class SpotifyController {
 			SpotifyApi object = spotifyConfiguration.getSpotifyObject();
 
 			AuthorizationCodeUriRequest authorizationCodeUriRequest = object.authorizationCodeUri()
-					.scope("user-library-read user-read-email user-read-private user-top-read user-read-recently-played user-read-currently-playing playlist-read-private user-follow-read")
+					.scope("user-library-read user-read-email user-read-private user-top-read user-read-recently-played user-read-currently-playing playlist-read-private user-follow-read user-follow-modify")
 					.show_dialog(true)
 					.build();
 
