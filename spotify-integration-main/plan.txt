@@ -1,0 +1,3 @@
+dodanie endpointu do edytowania playlist, zapisanych albumów i utworów, edytowanie obserwacji.
+dodanie przycisków i obsługa tego we frontendzie.
+dodanie testów do całego backendu.
