@@ -7,6 +7,7 @@ import TopSongsShort from './pages/TopSongsShort';
 import TopSongsLong from './pages/TopSongsLong';
 import RecentlyPlayed from './pages/RecentlyPlayed';
 import ProfilePage from './pages/ProfilePage';
+import SearchPage from './pages/SearchPage';
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
         <Route path="/top-songs-long" element={<TopSongsLong />} />
         <Route path="/user-recently-played" element={<RecentlyPlayed />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/search" element={<SearchPage />} />
       </Routes>
     </Router>
   );
