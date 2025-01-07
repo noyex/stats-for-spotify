@@ -35,6 +35,7 @@ import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUser
 import se.michaelthelin.spotify.requests.data.player.GetCurrentUsersRecentlyPlayedTracksRequest;
 import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTrackRequest;
 import se.michaelthelin.spotify.requests.data.playlists.GetListOfCurrentUsersPlaylistsRequest;
+import se.michaelthelin.spotify.requests.data.search.simplified.SearchAlbumsRequest;
 import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
 @RestController
@@ -74,7 +75,7 @@ public class SpotifyController {
 			SpotifyApi object = spotifyConfiguration.getSpotifyObject();
 
 			AuthorizationCodeUriRequest authorizationCodeUriRequest = object.authorizationCodeUri()
-					.scope("user-library-read user-read-email user-read-private user-top-read user-read-recently-played user-read-currently-playing playlist-read-private user-follow-read user-follow-modify")
+					.scope("user-library-read user-read-email user-read-private user-top-read user-read-recently-played user-read-currently-playing playlist-read-private user-follow-read user-follow-modify user-library-modify")
 					.show_dialog(true)
 					.build();
 
@@ -361,6 +362,27 @@ public class SpotifyController {
 		}
 		return null;
 	}
+
+	@GetMapping(value = "search-albums")
+	public AlbumSimplified[] searchAlbums(@RequestParam String userId, @RequestParam String query) {
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+
+		try {
+			final SearchAlbumsRequest request = spotifyApi.searchAlbums(query)
+					.limit(10)
+					.offset(0)
+					.market(CountryCode.PL)
+					.build();
+
+
+			final Paging<AlbumSimplified> albumPaging = request.execute();
+			return albumPaging.getItems();
+		} catch (Exception e) {
+			System.out.println("Exception occurred while searching albums: " + e.getMessage());
+			throw new RuntimeException("Error searching albums", e);
+		}
+	}
+
 
 
 }
