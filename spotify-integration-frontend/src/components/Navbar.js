@@ -8,7 +8,7 @@ const Navbar = ({ userId }) => {
             <Link to={`/top-songs-medium?id=${userId}`}>Top Songs</Link>
             <Link to={`/user-recently-played?id=${userId}`}>Recently Played</Link>
             <Link to={`/profile?id=${userId}`}>Profile</Link>
-            <Link to={`/search?id=${userId}`}>Search</Link>
+            <Link to={`/search-albums?id=${userId}`}>Search</Link>
         </nav>
     );
 };

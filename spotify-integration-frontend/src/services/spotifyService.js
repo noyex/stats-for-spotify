@@ -77,3 +77,11 @@ export const getCurrentUserSavedTracks = async (userId) => {
   }
   return response.json();
 }
+
+export const searchAlbums = async (userId, query) => {
+  const response = await fetch(`/api/search-albums?userId=${userId}&query=${encodeURIComponent(query)}`);
+  if (!response.ok){
+    throw new Error(`Failed to fetch albums: ${response.statusText}`);
+  }
+  return response.json();
+}

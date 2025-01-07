@@ -365,16 +365,15 @@ public class SpotifyController {
 
 	@GetMapping(value = "search-albums")
 	public AlbumSimplified[] searchAlbums(@RequestParam String userId, @RequestParam String query) {
+		UserDetails userDetails = controllerService.getUserDetails(userId);
 		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+		final SearchAlbumsRequest request = spotifyApi.searchAlbums(query)
+				.limit(10)
+				.offset(0)
+				.market(CountryCode.PL)
+				.build();
 
 		try {
-			final SearchAlbumsRequest request = spotifyApi.searchAlbums(query)
-					.limit(10)
-					.offset(0)
-					.market(CountryCode.PL)
-					.build();
-
-
 			final Paging<AlbumSimplified> albumPaging = request.execute();
 			return albumPaging.getItems();
 		} catch (Exception e) {
