@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 import '../styles/HomePage.css'; 
 import '../styles/Global.css'; 
 
@@ -33,15 +33,7 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
-      {userId && (
-        <nav className="nav-bar">
-          <Link to={`/home?id=${userId}`}>Home</Link>
-          <Link to={`/top-songs-medium?id=${userId}`}>Top Songs</Link>
-          <Link to={`/user-recently-played?id=${userId}`}>Recently Played</Link>
-          <Link to={`/profile?id=${userId}`}>Profile</Link>
-          <Link to={`/search?id=${userId}`}>Search</Link>
-        </nav>
-      )}
+      {userId && <Navbar userId={userId} />}
 
       <h1 className="welcome-message">Search for Item</h1>
     </div>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom'; 
+import { useLocation } from 'react-router-dom'; 
+import Navbar from '../components/Navbar';
 import { getUserRecentlyPlayed } from '../services/spotifyService';
 import '../styles/RecentlyPlayed.css';
 import '../styles/Global.css';
@@ -36,14 +37,7 @@ const RecentlyPlayed = () => {
 
   return (
     <div className="recently-played-container">
-      {userId && (
-        <nav className="nav-bar">
-          <Link to={`/home?id=${userId}`}>Home</Link>
-          <Link to={`/top-songs-medium?id=${userId}`}>Top Songs</Link>
-          <Link to={`/user-recently-played?id=${userId}`}>Recently Played</Link> 
-          <Link to={`/profile?id=${userId}`}>Profile</Link>
-        </nav>
-      )}
+      {userId && <Navbar userId={userId} />}
       <h1>Your Recently Played Tracks</h1>
       <h4>Please notice that the track must be playing at least for 30 seconds to appear on this page!</h4>
       {error && <div className="error">Error: {error}</div>}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import LogoutButton from '../components/LogoutButton';
 import SpotifyProfileButton from '../components/SpotifyProfileButton';
-import { Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 import { getCurrentUserProfile, getCurrentUserPlaylists, getCurrentUserFollowedArtists, getUserSavedAlbums, getCurrentUserSavedTracks } from '../services/spotifyService';
 import '../styles/Global.css';
 import '../styles/ProfilePage.css';
@@ -81,14 +81,7 @@ const ProfilePage = () => {
     return (
         <div className="profile-page">
             <nav className="nav-bar">
-                {userId && (
-                    <>
-                        <Link to={`/home?id=${userId}`}>Home</Link>
-                        <Link to={`/top-songs-medium?id=${userId}`}>Top Songs</Link>
-                        <Link to={`/user-recently-played?id=${userId}`}>Recently Played</Link>
-                        <Link to={`/profile?id=${userId}`}>Profile</Link>
-                    </>
-                )}
+            {userId && <Navbar userId={userId} />}
             </nav>
             <div className="profile-layout">
                 <div className="profile-left">
