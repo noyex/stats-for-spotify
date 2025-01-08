@@ -2,14 +2,12 @@ package com.jts.stats_api.controller;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.jts.stats_api.service.ControllerService;
 import com.jts.stats_client.config.SpotifyConfiguration;
 import com.jts.stats_data.entity.*;
-import com.jts.stats_data.repositories.PlaylistsRepository;
 import com.jts.stats_data.repositories.UserDetailsRepository;
 import com.jts.stats_service.service.*;
 import com.neovisionaries.i18n.CountryCode;
@@ -36,6 +34,7 @@ import se.michaelthelin.spotify.requests.data.player.GetCurrentUsersRecentlyPlay
 import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTrackRequest;
 import se.michaelthelin.spotify.requests.data.playlists.GetListOfCurrentUsersPlaylistsRequest;
 import se.michaelthelin.spotify.requests.data.search.simplified.SearchAlbumsRequest;
+import se.michaelthelin.spotify.requests.data.search.simplified.SearchArtistsRequest;
 import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
 @RestController
@@ -379,6 +378,25 @@ public class SpotifyController {
 		} catch (Exception e) {
 			System.out.println("Exception occurred while searching albums: " + e.getMessage());
 			throw new RuntimeException("Error searching albums", e);
+		}
+	}
+
+	@GetMapping(value = "search-artists")
+	public Artist[] searchArtists(@RequestParam String userId, @RequestParam String query) {
+		UserDetails userDetails = controllerService.getUserDetails(userId);
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+		final SearchArtistsRequest request = spotifyApi.searchArtists(query)
+				.limit(10)
+				.offset(0)
+				.market(CountryCode.PL)
+				.build();
+
+		try {
+			final Paging<Artist> artistPaging = request.execute();
+			return artistPaging.getItems();
+		} catch (Exception e) {
+			System.out.println("Exception occurred while searching artists: " + e.getMessage());
+			throw new RuntimeException("Error searching artists", e);
 		}
 	}
 
