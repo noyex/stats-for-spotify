@@ -5,6 +5,8 @@ import Navbar from '../components/Navbar';
 import '../styles/SearchArtistsPage.css';
 import '../styles/Global.css';
 import NavbarSearch from '../components/NavbarSearch';
+import FollowArtistButton from '../components/FollowArtistButton';
+
 
 const SearchArtistsPage = () => {
   const [query, setQuery] = useState('');
@@ -44,21 +46,22 @@ const SearchArtistsPage = () => {
 
       <ul className="artists-list-search">
         {artists.map((artist) => (
-          <li key={artist.id} className="artist-item-search">
+            <li key={artist.id} className="artist-item-search">
             {artist.images?.[0]?.url && (
-              <img
+                <img
                 src={artist.images[0].url}
                 alt={artist.name}
                 className="artist-image-search"
-              />
+                />
             )}
             <div className="artist-details-search">
-              <p className="artist-name-search">{artist.name}</p>
-              <p className="artist-genres-search">{artist.genres.join(", ")}</p>
+                <p className="artist-name-search">{artist.name}</p>
+                <p className="artist-genres-search">{artist.genres.join(", ")}</p>
+                <FollowArtistButton userId={userId} artistId={artist.id} />
             </div>
-          </li>
+            </li>
         ))}
-      </ul>
+        </ul>
     </div>
   );
 };

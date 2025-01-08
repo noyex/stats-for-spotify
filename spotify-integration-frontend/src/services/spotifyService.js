@@ -115,3 +115,10 @@ export const saveAlbum = async (userId, albumId) => {
     throw new Error(`Failed to save album: ${response.statusText}`);
   }
 }
+
+export const followArtist = async (userId, artistId) => {
+  const response = await fetch(`/api/follow-artist-for-current-user?userId=${userId}&artistId=${artistId}`, {method: 'PUT'});
+  if (!response.ok){
+    throw new Error(`Failed to follow artist: ${response.statusText}`);
+  }
+}
