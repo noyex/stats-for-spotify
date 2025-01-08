@@ -14,6 +14,7 @@ const RemoveSavedTrackButton = ({ userId, trackId }) => {
     try {
       await removeSavedTrack(userId, trackId);
       setRemoved(true);
+      window.location.reload();
     } catch (err) {
       setError(err.message);
     } finally {

@@ -14,6 +14,7 @@ const RemoveSavedAlbumButton = ({ userId, albumId }) => {
     try {
       await removeSavedAlbum(userId, albumId);
       setRemoved(true);
+      window.location.reload();
     } catch (err) {
       setError(err.message);
     } finally {

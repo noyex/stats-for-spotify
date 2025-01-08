@@ -14,6 +14,7 @@ const UnfollowArtistButton = ({ userId, artistId }) => {
     try {
       await unfollowArtist(userId, artistId);
       setUnfollowed(true);
+      window.location.reload();
     } catch (err) {
       setError(err.message);
     } finally {
