@@ -35,6 +35,7 @@ import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTra
 import se.michaelthelin.spotify.requests.data.playlists.GetListOfCurrentUsersPlaylistsRequest;
 import se.michaelthelin.spotify.requests.data.search.simplified.SearchAlbumsRequest;
 import se.michaelthelin.spotify.requests.data.search.simplified.SearchArtistsRequest;
+import se.michaelthelin.spotify.requests.data.search.simplified.SearchTracksRequest;
 import se.michaelthelin.spotify.requests.data.users_profile.GetCurrentUsersProfileRequest;
 
 @RestController
@@ -397,6 +398,25 @@ public class SpotifyController {
 		} catch (Exception e) {
 			System.out.println("Exception occurred while searching artists: " + e.getMessage());
 			throw new RuntimeException("Error searching artists", e);
+		}
+	}
+
+	@GetMapping(value = "search-tracks")
+	public Track[] searchTracks(@RequestParam String userId, @RequestParam String query) {
+		UserDetails userDetails = controllerService.getUserDetails(userId);
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+		final SearchTracksRequest request = spotifyApi.searchTracks(query)
+				.limit(10)
+				.offset(0)
+				.market(CountryCode.PL)
+				.build();
+
+		try {
+			final Paging<Track> trackPaging = request.execute();
+			return trackPaging.getItems();
+		} catch (Exception e) {
+			System.out.println("Exception occurred while searching tracks: " + e.getMessage());
+			throw new RuntimeException("Error searching tracks", e);
 		}
 	}
 
