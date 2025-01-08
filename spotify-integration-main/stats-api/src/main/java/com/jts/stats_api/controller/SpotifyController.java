@@ -483,8 +483,8 @@ public class SpotifyController {
 		}
 	}
 
-	@DeleteMapping(value = "unsave-track-for-current-user")
-	public void unsaveTrackForCurrentUser(@RequestParam String userId, @RequestParam String trackId) {
+	@DeleteMapping(value = "remove-saved-track-for-current-user")
+	public void removeSavedTrackForCurrentUser(@RequestParam String userId, @RequestParam String trackId) {
 		UserDetails userDetails = controllerService.getUserDetails(userId);
 		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 
@@ -497,6 +497,22 @@ public class SpotifyController {
 			throw new RuntimeException("Error unsaving track for current user", e);
 		}
 	}
+
+	@DeleteMapping(value = "remove-saved-album-for-current-user")
+	public void removeSavedAlbumForCurrentUser(@RequestParam String userId, @RequestParam String albumId) {
+		UserDetails userDetails = controllerService.getUserDetails(userId);
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+
+		final RemoveAlbumsForCurrentUserRequest request = spotifyApi.removeAlbumsForCurrentUser(albumId)
+				.build();
+		try {
+			request.execute();
+		} catch (Exception e) {
+			System.out.println("Exception occurred while unsaving album for current user: " + e.getMessage());
+			throw new RuntimeException("Error unsaving album for current user", e);
+		}
+	}
+
 
 
 
