@@ -5,6 +5,8 @@ import Navbar from '../components/Navbar';
 import { getCurrentUserProfile, getCurrentUserPlaylists, getCurrentUserFollowedArtists, getUserSavedAlbums, getCurrentUserSavedTracks } from '../services/spotifyService';
 import '../styles/Global.css';
 import '../styles/ProfilePage.css';
+import UnfollowArtistButton from '../components/UnfollowArtistButton';
+
 
 const ProfilePage = () => {
     const [userId, setUserId] = useState(null);
@@ -143,6 +145,7 @@ const ProfilePage = () => {
                                     />
                                     <div className="artists-details">
                                         <h3 className="artists-name">{artist.name}</h3>
+                                        <UnfollowArtistButton userId={userId} artistId={artist.id} />
                                     </div>
                                 </li>
                             ))}

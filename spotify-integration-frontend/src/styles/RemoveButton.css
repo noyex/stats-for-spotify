@@ -1,0 +1,25 @@
+.remove-button {
+    padding: 5px 10px;
+    background: linear-gradient(135deg, red, #191414);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .remove-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .remove-button:hover:not(:disabled) {
+    background-color: darkred;
+    transform: scale(1.05);
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }

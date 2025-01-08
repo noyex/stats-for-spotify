@@ -122,3 +122,26 @@ export const followArtist = async (userId, artistId) => {
     throw new Error(`Failed to follow artist: ${response.statusText}`);
   }
 }
+
+export const unfollowArtist = async (userId, artistId) => {
+  const response = await fetch(`/api/unfollow-artist-for-current-user?userId=${userId}&artistId=${artistId}`, {method: 'DELETE'});
+  if (!response.ok){
+    throw new Error(`Failed to unfollow artist: ${response.statusText}`);
+  }
+}
+
+export const removeSavedTrack = async (userId, trackId) => {
+  const response = await fetch(`/api/remove-saved-track-for-current-user?userId=${userId}&trackId=${trackId}`, {method: 'DELETE'});
+  if (!response.ok){
+    throw new Error(`Failed to remove saved track: ${response.statusText}`);
+  }
+}
+
+export const removeSavedAlbum = async (userId, albumId) => {
+  const response = await fetch(`/api/remove-saved-album-for-current-user?userId=${userId}&albumId=${albumId}`, {method: 'DELETE'});
+  if (!response.ok){
+    throw new Error(`Failed to remove saved album: ${response.statusText}`);
+  }
+}
+
+
