@@ -29,6 +29,7 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 import se.michaelthelin.spotify.requests.data.follow.GetUsersFollowedArtistsRequest;
 import se.michaelthelin.spotify.requests.data.library.GetCurrentUsersSavedAlbumsRequest;
 import se.michaelthelin.spotify.requests.data.library.GetUsersSavedTracksRequest;
+import se.michaelthelin.spotify.requests.data.library.SaveAlbumsForCurrentUserRequest;
 import se.michaelthelin.spotify.requests.data.library.SaveTracksForUserRequest;
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopTracksRequest;
 import se.michaelthelin.spotify.requests.data.player.GetCurrentUsersRecentlyPlayedTracksRequest;
@@ -433,6 +434,21 @@ public class SpotifyController {
 		} catch (Exception e) {
 			System.out.println("Exception occurred while saving track for current user: " + e.getMessage());
 			throw new RuntimeException("Error saving track for current user", e);
+		}
+	}
+
+	@PutMapping(value = "save-album-for-current-user")
+	public void saveAlbumForCurrentUser(@RequestParam String userId, @RequestParam String albumId) {
+		UserDetails userDetails = controllerService.getUserDetails(userId);
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+
+		final SaveAlbumsForCurrentUserRequest request = spotifyApi.saveAlbumsForCurrentUser(albumId)
+				.build();
+		try {
+			request.execute();
+		} catch (Exception e) {
+			System.out.println("Exception occurred while saving album for current user: " + e.getMessage());
+			throw new RuntimeException("Error saving album for current user", e);
 		}
 	}
 
