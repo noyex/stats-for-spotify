@@ -209,7 +209,7 @@ public class SpotifyController {
 		return new Track[0];
 	}
 
-	@GetMapping(value = "user-top-songs-Long")
+	@GetMapping(value = "user-top-songs-long")
 	public Track[] getUserTopTracksLong(@RequestParam String userId) {
 		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 

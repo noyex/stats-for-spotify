@@ -31,7 +31,7 @@ public class UserDetails implements Serializable {
 	@Column(name ="email")
 	private String email;
 
-	@Column(name ="access_token")
+	@Column(name ="access_token", columnDefinition = "TEXT")
 	private String accessToken;
 
 	@Column(name ="refresh_token")
