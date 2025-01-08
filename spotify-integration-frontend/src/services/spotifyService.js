@@ -93,3 +93,11 @@ export const searchArtists = async (userId, query) => {
   }
   return response.json();
 }
+
+export const searchTracks = async (userId, query) => {
+  const response = await fetch(`/api/search-tracks?userId=${userId}&query=${encodeURIComponent(query)}`);
+  if (!response.ok){
+    throw new Error(`Failed to fetch tracks: ${response.statusText}`);
+  }
+  return response.json();
+}
