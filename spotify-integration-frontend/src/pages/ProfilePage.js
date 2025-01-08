@@ -6,6 +6,10 @@ import { getCurrentUserProfile, getCurrentUserPlaylists, getCurrentUserFollowedA
 import '../styles/Global.css';
 import '../styles/ProfilePage.css';
 import UnfollowArtistButton from '../components/UnfollowArtistButton';
+import RemoveSavedTrackButton from '../components/RemoveSavedTrackButton';
+import RemoveSavedAlbumButton from '../components/RemoveSavedAlbumButton';
+
+
 
 
 const ProfilePage = () => {
@@ -175,6 +179,7 @@ const ProfilePage = () => {
                                             <p className="album-name">{album.name}</p>
                                             <p className="album-tracks">Tracks: {album.tracks.total}</p>
                                             <p className="album-artist">Artists: {artistNames}</p>
+                                            <RemoveSavedAlbumButton userId={userId} albumId={album.id} />
                                         </div>
                                     </li>
                                 );
@@ -202,6 +207,7 @@ const ProfilePage = () => {
                                             <p className="album-name">{track.name}</p>
                                             <p className="track-artist-profile">Artists: {artistNames}</p>
                                             <p className="track-album-profile">Album: {track.album.name}</p>
+                                            <RemoveSavedTrackButton userId={userId} trackId={track.id} />
                                         </div>
                                     </li>
                                 );
