@@ -29,10 +29,7 @@ import se.michaelthelin.spotify.requests.authorization.authorization_code.Author
 import se.michaelthelin.spotify.requests.data.follow.FollowArtistsOrUsersRequest;
 import se.michaelthelin.spotify.requests.data.follow.GetUsersFollowedArtistsRequest;
 import se.michaelthelin.spotify.requests.data.follow.UnfollowArtistsOrUsersRequest;
-import se.michaelthelin.spotify.requests.data.library.GetCurrentUsersSavedAlbumsRequest;
-import se.michaelthelin.spotify.requests.data.library.GetUsersSavedTracksRequest;
-import se.michaelthelin.spotify.requests.data.library.SaveAlbumsForCurrentUserRequest;
-import se.michaelthelin.spotify.requests.data.library.SaveTracksForUserRequest;
+import se.michaelthelin.spotify.requests.data.library.*;
 import se.michaelthelin.spotify.requests.data.personalization.simplified.GetUsersTopTracksRequest;
 import se.michaelthelin.spotify.requests.data.player.GetCurrentUsersRecentlyPlayedTracksRequest;
 import se.michaelthelin.spotify.requests.data.player.GetUsersCurrentlyPlayingTrackRequest;
@@ -486,7 +483,20 @@ public class SpotifyController {
 		}
 	}
 
-	
+	@DeleteMapping(value = "unsave-track-for-current-user")
+	public void unsaveTrackForCurrentUser(@RequestParam String userId, @RequestParam String trackId) {
+		UserDetails userDetails = controllerService.getUserDetails(userId);
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+
+		final RemoveUsersSavedTracksRequest request = spotifyApi.removeUsersSavedTracks(trackId)
+				.build();
+		try {
+			request.execute();
+		} catch (Exception e) {
+			System.out.println("Exception occurred while unsaving track for current user: " + e.getMessage());
+			throw new RuntimeException("Error unsaving track for current user", e);
+		}
+	}
 
 
 
