@@ -8,6 +8,9 @@ import TopSongsLong from './pages/TopSongsLong';
 import RecentlyPlayed from './pages/RecentlyPlayed';
 import ProfilePage from './pages/ProfilePage';
 import SearchAlbumsPage from './pages/SearchAlbumsPage';
+import SearchTracksPage from './pages/SearchTracksPage';
+import SearchArtistsPage from './pages/SearchArtistsPage';
+
 
 const App = () => {
   return (
@@ -21,6 +24,8 @@ const App = () => {
         <Route path="/user-recently-played" element={<RecentlyPlayed />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/search-albums" element={<SearchAlbumsPage />} />
+        <Route path="/search-tracks" element={<SearchTracksPage />} />
+        <Route path="/search-artists" element={<SearchArtistsPage />} />
       </Routes>
     </Router>
   );

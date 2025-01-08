@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import '../styles/SearchAlbumsPage.css';
 import '../styles/Global.css';
+import NavbarSearch from '../components/NavbarSearch';
 
 const SearchAlbumsPage = () => {
   const [query, setQuery] = useState('');
@@ -27,6 +28,7 @@ const SearchAlbumsPage = () => {
     <div className="search-albums-page">
       {userId && <Navbar userId={userId} />}
       <h1>Search for Albums</h1>
+      {userId && <NavbarSearch userId={userId} />}
       <div className="search-bar">
         <input
           type="text"
