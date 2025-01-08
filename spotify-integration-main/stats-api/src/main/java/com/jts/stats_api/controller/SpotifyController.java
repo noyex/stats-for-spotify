@@ -26,6 +26,7 @@ import se.michaelthelin.spotify.model_objects.miscellaneous.CurrentlyPlaying;
 import se.michaelthelin.spotify.model_objects.specification.*;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeRequest;
 import se.michaelthelin.spotify.requests.authorization.authorization_code.AuthorizationCodeUriRequest;
+import se.michaelthelin.spotify.requests.data.follow.FollowArtistsOrUsersRequest;
 import se.michaelthelin.spotify.requests.data.follow.GetUsersFollowedArtistsRequest;
 import se.michaelthelin.spotify.requests.data.library.GetCurrentUsersSavedAlbumsRequest;
 import se.michaelthelin.spotify.requests.data.library.GetUsersSavedTracksRequest;
@@ -449,6 +450,22 @@ public class SpotifyController {
 		} catch (Exception e) {
 			System.out.println("Exception occurred while saving album for current user: " + e.getMessage());
 			throw new RuntimeException("Error saving album for current user", e);
+		}
+	}
+
+	@PutMapping(value = "follow-artist-for-current-user")
+	public void followArtistForCurrentUser(@RequestParam String userId, @RequestParam String artistId) {
+		UserDetails userDetails = controllerService.getUserDetails(userId);
+		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+		ModelObjectType type = ModelObjectType.ARTIST;
+
+		final FollowArtistsOrUsersRequest request = spotifyApi.followArtistsOrUsers(type, new String[]{artistId})
+				.build();
+		try {
+			request.execute();
+		} catch (Exception e) {
+			System.out.println("Exception occurred while following artist for current user: " + e.getMessage());
+			throw new RuntimeException("Error following artist for current user", e);
 		}
 	}
 
