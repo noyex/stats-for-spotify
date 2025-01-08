@@ -428,7 +428,7 @@ public class SpotifyController {
 
 		final SaveTracksForUserRequest request = spotifyApi.saveTracksForUser(trackId)
 				.build();
-		try
+		try {
 			request.execute();
 		} catch (Exception e) {
 			System.out.println("Exception occurred while saving track for current user: " + e.getMessage());
