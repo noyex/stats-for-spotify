@@ -85,3 +85,11 @@ export const searchAlbums = async (userId, query) => {
   }
   return response.json();
 }
+
+export const searchArtists = async (userId, query) => {
+  const response = await fetch(`/api/search-artists?userId=${userId}&query=${encodeURIComponent(query)}`);
+  if (!response.ok){
+    throw new Error(`Failed to fetch artists: ${response.statusText}`);
+  }
+  return response.json();
+}
