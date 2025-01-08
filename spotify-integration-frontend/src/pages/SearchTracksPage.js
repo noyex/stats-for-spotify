@@ -25,6 +25,12 @@ const SearchTracksPage = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="search-tracks-page">
       {userId && <Navbar userId={userId} />}
@@ -36,6 +42,7 @@ const SearchTracksPage = () => {
           placeholder="Search for a track..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
           className="search-input"
         />
         <button onClick={handleSearch} className="search-button">Search</button>

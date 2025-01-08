@@ -26,6 +26,12 @@ const SearchAlbumsPage = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="search-albums-page">
       {userId && <Navbar userId={userId} />}
@@ -37,6 +43,7 @@ const SearchAlbumsPage = () => {
           placeholder="Search for an album..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={handleKeyDown}
           className="search-input"
         />
         <button onClick={handleSearch} className="search-button">Search</button>
