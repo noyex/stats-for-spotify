@@ -108,3 +108,10 @@ export const saveTrack = async (userId, trackId) => {
     throw new Error(`Failed to save track: ${response.statusText}`);
   }
 }
+
+export const saveAlbum = async (userId, albumId) => {
+  const response = await fetch(`/api/save-album-for-current-user?userId=${userId}&albumId=${albumId}`, {method: 'PUT'});
+  if (!response.ok){
+    throw new Error(`Failed to save album: ${response.statusText}`);
+  }
+}

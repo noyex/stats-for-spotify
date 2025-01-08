@@ -5,6 +5,8 @@ import Navbar from '../components/Navbar';
 import '../styles/SearchAlbumsPage.css';
 import '../styles/Global.css';
 import NavbarSearch from '../components/NavbarSearch';
+import SaveAlbumButton from '../components/SaveAlbumButton';
+
 
 const SearchAlbumsPage = () => {
   const [query, setQuery] = useState('');
@@ -55,6 +57,7 @@ const SearchAlbumsPage = () => {
             <div className="album-details-search">
               <p className="album-name-search">{album.name}</p>
               <p className="album-artists-search">by {album.artists.map((artist) => artist.name).join(", ")}</p>
+              <SaveAlbumButton userId={userId} albumId={album.id} />
             </div>
           </li>
         ))}
