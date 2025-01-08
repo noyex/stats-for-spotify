@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import '../styles/SearchTracksPage.css';
 import '../styles/Global.css';
 import NavbarSearch from '../components/NavbarSearch';
+import SaveTrackButton from '../components/SaveTrackButton';
 
 const SearchTracksPage = () => {
   const [query, setQuery] = useState('');
@@ -44,21 +45,22 @@ const SearchTracksPage = () => {
 
       <ul className="tracks-list-search">
         {tracks.map((track) => (
-          <li key={track.id} className="track-item-search">
+            <li key={track.id} className="track-item-search">
             {track.album.images?.[0]?.url && (
-              <img
+                <img
                 src={track.album.images[0].url}
                 alt={track.name}
                 className="track-image-search"
-              />
+                />
             )}
             <div className="track-details-search">
-              <p className="track-name-search">{track.name}</p>
-              <p className="track-artists-search">by {track.artists.map((artist) => artist.name).join(", ")}</p>
+                <p className="track-name-search">{track.name}</p>
+                <p className="track-artists-search">by {track.artists.map((artist) => artist.name).join(", ")}</p>
+                <SaveTrackButton userId={userId} trackId={track.id} />
             </div>
-          </li>
+            </li>
         ))}
-      </ul>
+        </ul>
     </div>
   );
 };

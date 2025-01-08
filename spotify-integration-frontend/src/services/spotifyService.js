@@ -101,3 +101,10 @@ export const searchTracks = async (userId, query) => {
   }
   return response.json();
 }
+
+export const saveTrack = async (userId, trackId) => {
+  const response = await fetch(`/api/save-track-for-current-user?userId=${userId}&trackId=${trackId}`, {method: 'PUT'});
+  if (!response.ok){
+    throw new Error(`Failed to save track: ${response.statusText}`);
+  }
+}
