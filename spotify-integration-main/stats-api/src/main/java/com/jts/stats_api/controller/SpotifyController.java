@@ -13,6 +13,7 @@ import com.jts.stats_service.service.*;
 import com.neovisionaries.i18n.CountryCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -169,6 +170,7 @@ public class SpotifyController {
 	}
 
 	@GetMapping(value = "user-top-songs-medium")
+	@Cacheable("topSongsMedium")
 	public Track[] getUserTopTracksMedium(@RequestParam String userId) {
 		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 		
@@ -190,6 +192,7 @@ public class SpotifyController {
 	}
 
 	@GetMapping(value = "user-top-songs-short")
+	@Cacheable("topSongsShort")
 	public Track[] getUserTopTracksShort(@RequestParam String userId) {
 		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 
@@ -211,6 +214,7 @@ public class SpotifyController {
 	}
 
 	@GetMapping(value = "user-top-songs-long")
+	@Cacheable("topSongsLong")
 	public Track[] getUserTopTracksLong(@RequestParam String userId) {
 		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 
@@ -231,7 +235,9 @@ public class SpotifyController {
 		return new Track[0];
 	}
 
+
 	@GetMapping(value = "user-recently-played")
+	@Cacheable("recentlyPlayed")
 	public PlayHistory[] getUserPlaybackHistory(@RequestParam String userId) {
 		UserDetails userDetails = controllerService.getUserDetails(userId);
 		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
@@ -298,6 +304,7 @@ public class SpotifyController {
 	}
 
 	@GetMapping(value = "current-user-playlists")
+	@Cacheable("playlists")
 	public PlaylistSimplified[] getCurrentUserPlaylists(@RequestParam String userId) {
 		UserDetails userDetails = controllerService.getUserDetails(userId);
 		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
