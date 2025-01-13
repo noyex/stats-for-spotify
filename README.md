@@ -28,6 +28,7 @@ Stats for Spotify allows users to:
 - **API**: Spotify Web API
 - **Others**: Docker
 
+## Appearance
 ![login-page](./docs/appearance/login_page.png)
 ![oauth-login](./docs/appearance/OAuth_login.png)
 ![home-page](./docs/appearance/home_page.png)
