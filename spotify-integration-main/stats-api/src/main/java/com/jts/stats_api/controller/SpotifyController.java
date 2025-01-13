@@ -136,7 +136,6 @@ public class SpotifyController {
 	@GetMapping(value = "home")
 	public String home(@RequestParam String userId) {
 		try {
-
 			return userId;
 		} catch (Exception e) {
 			System.out.println("Exception occured while landing to home page: " + e);
@@ -144,29 +143,28 @@ public class SpotifyController {
 
 		return null;
 	}
-	
+
 	@GetMapping(value = "user-saved-album")
 	public SavedAlbum[] getCurrentUserSavedAlbum(@RequestParam String userId) {
-		UserDetails userDetails = controllerService.getUserDetails(userId);
-		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
-		
-		final GetCurrentUsersSavedAlbumsRequest getUsersTopArtistsRequest = spotifyApi.getCurrentUsersSavedAlbums()
-				.limit(50)
-				.offset(0)
-				.build();
-
 		try {
-			final Paging<SavedAlbum> artistPaging = getUsersTopArtistsRequest.execute();
-			SavedAlbum[] savedAlbums = artistPaging.getItems();
+			UserDetails userDetails = controllerService.getUserDetails(userId);
+			SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+
+			final GetCurrentUsersSavedAlbumsRequest request = spotifyApi.getCurrentUsersSavedAlbums()
+					.limit(50)
+					.offset(0)
+					.build();
+
+			final Paging<SavedAlbum> albumPaging = request.execute();
+			SavedAlbum[] savedAlbums = albumPaging.getItems();
 
 			List<Albums> newAlbums = albumService.albumMapper(savedAlbums);
 			albumService.updateAndFetchAlbums(userDetails, newAlbums);
 			return savedAlbums;
 		} catch (Exception e) {
-			System.out.println("Exception occured while fetching user saved album: " + e);
+			System.out.println("Exception occurred while fetching user saved album: " + e.getMessage());
+			return new SavedAlbum[0];
 		}
-		
-		return new SavedAlbum[0];
 	}
 
 	@GetMapping(value = "user-top-songs-medium")
@@ -239,15 +237,15 @@ public class SpotifyController {
 	@GetMapping(value = "user-recently-played")
 	@Cacheable("recentlyPlayed")
 	public PlayHistory[] getUserPlaybackHistory(@RequestParam String userId) {
-		UserDetails userDetails = controllerService.getUserDetails(userId);
-		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
-
-		final GetCurrentUsersRecentlyPlayedTracksRequest request = spotifyApi.getCurrentUsersRecentlyPlayedTracks()
-				.limit(48)
-				.before(new Date(System.currentTimeMillis()))
-				.build();
-
 		try {
+			UserDetails userDetails = controllerService.getUserDetails(userId);
+			SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+
+			final GetCurrentUsersRecentlyPlayedTracksRequest request = spotifyApi.getCurrentUsersRecentlyPlayedTracks()
+					.limit(48)
+					.before(new Date(System.currentTimeMillis()))
+					.build();
+
 			final PagingCursorbased<PlayHistory> trackPaging = request.execute();
 			PlayHistory[] recentlyPlayedTracks = trackPaging.getItems();
 
@@ -289,31 +287,32 @@ public class SpotifyController {
 
 	@GetMapping(value = "current-user-profile")
 	public User getCurrentUserProfile(@RequestParam String userId) {
-		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
-
-		final GetCurrentUsersProfileRequest getCurrentUsersProfileRequest = spotifyApi.getCurrentUsersProfile()
-				.build();
 		try {
+			SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+
+			final GetCurrentUsersProfileRequest getCurrentUsersProfileRequest = spotifyApi.getCurrentUsersProfile()
+					.build();
+
 			final User user = getCurrentUsersProfileRequest.execute();
 			System.out.println("Fetched User: " + user);
 			return user;
 		} catch (Exception e) {
 			System.out.println("Exception occurred while fetching user profile: " + e);
+			return null;
 		}
-		return null;
 	}
 
 	@GetMapping(value = "current-user-playlists")
 	@Cacheable("playlists")
 	public PlaylistSimplified[] getCurrentUserPlaylists(@RequestParam String userId) {
-		UserDetails userDetails = controllerService.getUserDetails(userId);
-		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
-		final GetListOfCurrentUsersPlaylistsRequest request = spotifyApi.getListOfCurrentUsersPlaylists()
-				.limit(50)
-				.offset(0)
-				.build();
-
 		try {
+			UserDetails userDetails = controllerService.getUserDetails(userId);
+			SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+			final GetListOfCurrentUsersPlaylistsRequest request = spotifyApi.getListOfCurrentUsersPlaylists()
+					.limit(50)
+					.offset(0)
+					.build();
+
 			final Paging<PlaylistSimplified> playlistSimplifiedPaging = request.execute();
 			PlaylistSimplified[] playlists = playlistSimplifiedPaging.getItems();
 
@@ -322,20 +321,20 @@ public class SpotifyController {
 			return playlists;
 		} catch (Exception e){
 			System.out.println("Exception occurred while fetching playlists: " + e);
+			return new PlaylistSimplified[0];
 		}
-		return null;
 	}
 
 	@GetMapping(value = "current-user-followed-artists")
 	public Artist[] getCurrentUserFollowedArtists(@RequestParam String userId) {
-		UserDetails userDetails = controllerService.getUserDetails(userId);
-		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
-		final ModelObjectType type = ModelObjectType.ARTIST;
-
-		final GetUsersFollowedArtistsRequest request = spotifyApi.getUsersFollowedArtists(type)
-				.limit(50)
-				.build();
 		try {
+			UserDetails userDetails = controllerService.getUserDetails(userId);
+			SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+			final ModelObjectType type = ModelObjectType.ARTIST;
+
+			final GetUsersFollowedArtistsRequest request = spotifyApi.getUsersFollowedArtists(type)
+					.limit(50)
+					.build();
 			final PagingCursorbased<Artist> artistPagingCursorbased = request.execute();
 			Artist[] artists = artistPagingCursorbased.getItems();
 
@@ -344,21 +343,22 @@ public class SpotifyController {
 			return artists;
 		} catch (Exception e) {
 			System.out.println("Exception occurred while fetching artists: " + e);
+			return null;
 		}
-		return null;
+
 	}
 
 	@GetMapping(value = "current-user-saved-tracks")
 	public SavedTrack[] getCurrentUserSavedTracks(@RequestParam String userId) {
-		UserDetails userDetails = controllerService.getUserDetails(userId);
-		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
-
-		final GetUsersSavedTracksRequest request = spotifyApi.getUsersSavedTracks()
-				.limit(50)
-				.market(CountryCode.PL)
-				.build();
-
 		try {
+			UserDetails userDetails = controllerService.getUserDetails(userId);
+			SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+
+			final GetUsersSavedTracksRequest request = spotifyApi.getUsersSavedTracks()
+					.limit(50)
+					.market(CountryCode.PL)
+					.build();
+
 			final Paging<SavedTrack> trackPaging = request.execute();
 			SavedTrack[] savedTracks = trackPaging.getItems();
 
@@ -367,8 +367,8 @@ public class SpotifyController {
 			return savedTracks;
 		} catch (Exception e){
 			System.out.println("Exception occurred while fetching tracks: " + e);
+			return new SavedTrack[0];
 		}
-		return null;
 	}
 
 	@GetMapping(value = "search-albums")
@@ -392,6 +392,7 @@ public class SpotifyController {
 
 	@GetMapping(value = "search-artists")
 	public Artist[] searchArtists(@RequestParam String userId, @RequestParam String query) {
+		try {
 		UserDetails userDetails = controllerService.getUserDetails(userId);
 		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
 		final SearchArtistsRequest request = spotifyApi.searchArtists(query)
@@ -400,7 +401,6 @@ public class SpotifyController {
 				.market(CountryCode.PL)
 				.build();
 
-		try {
 			final Paging<Artist> artistPaging = request.execute();
 			return artistPaging.getItems();
 		} catch (Exception e) {
