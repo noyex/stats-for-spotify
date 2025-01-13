@@ -34,4 +34,6 @@ Stats for Spotify allows users to:
 - **Others**: Docker
 
 ![home-page](./docs/appearance/top_tracks.png)
+![oauth-login](./docs/appearance/OAuth_login.png)
+
 
