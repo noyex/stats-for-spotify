@@ -6,6 +6,11 @@ An interactive dashboard built using the Spotify Web API, designed to provide us
 - [Overview](#overview)
 - [Key Features](#key-features)
 - [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Available Scripts](#available-scripts)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Overview
 
@@ -27,4 +32,5 @@ Stats for Spotify allows users to:
 - **Frontend**: HTML, CSS, JavaScript (React.js)
 - **API**: Spotify Web API
 - **Others**: Docker
+
 
