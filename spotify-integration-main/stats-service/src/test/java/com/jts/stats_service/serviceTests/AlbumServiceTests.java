@@ -15,6 +15,7 @@ import se.michaelthelin.spotify.model_objects.specification.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class AlbumServiceTests {
@@ -69,7 +70,7 @@ class AlbumServiceTests {
         newAlbum.setArtistName("New Artist");
 
         when(userDetailsRepository.findByRefId("testRefId")).thenReturn(userDetails);
-        when(albumsRepository.findByUserDetailsId(1)).thenReturn(List.of());
+        when(albumsRepository.findByUserDetailsId(1)).thenReturn(List.of(), List.of(newAlbum));
 
         List<Albums> updatedAlbums = albumService.updateAndFetchAlbums(user, List.of(newAlbum));
 
@@ -79,6 +80,23 @@ class AlbumServiceTests {
 
         verify(albumsRepository, times(1)).deleteAll(any());
         verify(albumsRepository, times(1)).save(any(Albums.class));
-        verify(albumsRepository, times(1)).findByUserDetailsId(1);
+        verify(albumsRepository, times(2)).findByUserDetailsId(1); // 2 wywołania: przed i po zapisaniu
+    }
+
+    @Test
+    void testUpdateAndFetchAlbumsUserNotFound() {
+        UserDetails user = new UserDetails();
+        user.setRefId("nonExistentRefId");
+
+        when(userDetailsRepository.findByRefId("nonExistentRefId")).thenReturn(null);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
+                albumService.updateAndFetchAlbums(user, List.of())
+        );
+
+        assertEquals("User not found", exception.getMessage());
+        verify(userDetailsRepository, times(1)).findByRefId("nonExistentRefId");
+        verify(albumsRepository, never()).findByUserDetailsId(anyInt());
+        verify(albumsRepository, never()).save(any(Albums.class));
     }
 }

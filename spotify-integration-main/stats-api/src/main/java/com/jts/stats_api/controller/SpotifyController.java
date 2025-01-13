@@ -430,12 +430,13 @@ public class SpotifyController {
 
 	@PutMapping(value = "save-track-for-current-user")
 	public void saveTrackForCurrentUser(@RequestParam String userId, @RequestParam String trackId) {
-		UserDetails userDetails = controllerService.getUserDetails(userId);
-		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
-
-		final SaveTracksForUserRequest request = spotifyApi.saveTracksForUser(trackId)
-				.build();
 		try {
+			UserDetails userDetails = controllerService.getUserDetails(userId);
+			SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+
+			final SaveTracksForUserRequest request = spotifyApi.saveTracksForUser(trackId)
+					.build();
+
 			request.execute();
 		} catch (Exception e) {
 			System.out.println("Exception occurred while saving track for current user: " + e.getMessage());
@@ -445,12 +446,13 @@ public class SpotifyController {
 
 	@PutMapping(value = "save-album-for-current-user")
 	public void saveAlbumForCurrentUser(@RequestParam String userId, @RequestParam String albumId) {
-		UserDetails userDetails = controllerService.getUserDetails(userId);
-		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
-
-		final SaveAlbumsForCurrentUserRequest request = spotifyApi.saveAlbumsForCurrentUser(albumId)
-				.build();
 		try {
+			UserDetails userDetails = controllerService.getUserDetails(userId);
+			SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+
+			final SaveAlbumsForCurrentUserRequest request = spotifyApi.saveAlbumsForCurrentUser(albumId)
+					.build();
+
 			request.execute();
 		} catch (Exception e) {
 			System.out.println("Exception occurred while saving album for current user: " + e.getMessage());
@@ -460,13 +462,14 @@ public class SpotifyController {
 
 	@PutMapping(value = "follow-artist-for-current-user")
 	public void followArtistForCurrentUser(@RequestParam String userId, @RequestParam String artistId) {
-		UserDetails userDetails = controllerService.getUserDetails(userId);
-		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
-		ModelObjectType type = ModelObjectType.ARTIST;
-
-		final FollowArtistsOrUsersRequest request = spotifyApi.followArtistsOrUsers(type, new String[]{artistId})
-				.build();
 		try {
+			UserDetails userDetails = controllerService.getUserDetails(userId);
+			SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+			ModelObjectType type = ModelObjectType.ARTIST;
+
+			final FollowArtistsOrUsersRequest request = spotifyApi.followArtistsOrUsers(type, new String[]{artistId})
+					.build();
+
 			request.execute();
 		} catch (Exception e) {
 			System.out.println("Exception occurred while following artist for current user: " + e.getMessage());
@@ -476,13 +479,14 @@ public class SpotifyController {
 
 	@DeleteMapping(value = "unfollow-artist-for-current-user")
 	public void unfollowArtistForCurrentUser(@RequestParam String userId, @RequestParam String artistId) {
-		UserDetails userDetails = controllerService.getUserDetails(userId);
-		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
-		ModelObjectType type = ModelObjectType.ARTIST;
-
-		final UnfollowArtistsOrUsersRequest request = spotifyApi.unfollowArtistsOrUsers(type, new String[]{artistId})
-				.build();
 		try {
+			UserDetails userDetails = controllerService.getUserDetails(userId);
+			SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+			ModelObjectType type = ModelObjectType.ARTIST;
+
+			final UnfollowArtistsOrUsersRequest request = spotifyApi.unfollowArtistsOrUsers(type, new String[]{artistId})
+					.build();
+
 			request.execute();
 		} catch (Exception e) {
 			System.out.println("Exception occurred while unfollowing artist for current user: " + e.getMessage());
@@ -492,12 +496,13 @@ public class SpotifyController {
 
 	@DeleteMapping(value = "remove-saved-track-for-current-user")
 	public void removeSavedTrackForCurrentUser(@RequestParam String userId, @RequestParam String trackId) {
-		UserDetails userDetails = controllerService.getUserDetails(userId);
-		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
-
-		final RemoveUsersSavedTracksRequest request = spotifyApi.removeUsersSavedTracks(trackId)
-				.build();
 		try {
+			UserDetails userDetails = controllerService.getUserDetails(userId);
+			SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+
+			final RemoveUsersSavedTracksRequest request = spotifyApi.removeUsersSavedTracks(trackId)
+					.build();
+
 			request.execute();
 		} catch (Exception e) {
 			System.out.println("Exception occurred while unsaving track for current user: " + e.getMessage());
@@ -507,12 +512,13 @@ public class SpotifyController {
 
 	@DeleteMapping(value = "remove-saved-album-for-current-user")
 	public void removeSavedAlbumForCurrentUser(@RequestParam String userId, @RequestParam String albumId) {
-		UserDetails userDetails = controllerService.getUserDetails(userId);
-		SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
-
-		final RemoveAlbumsForCurrentUserRequest request = spotifyApi.removeAlbumsForCurrentUser(albumId)
-				.build();
 		try {
+			UserDetails userDetails = controllerService.getUserDetails(userId);
+			SpotifyApi spotifyApi = controllerService.getSpotifyApiForUser(userId);
+
+			final RemoveAlbumsForCurrentUserRequest request = spotifyApi.removeAlbumsForCurrentUser(albumId)
+					.build();
+
 			request.execute();
 		} catch (Exception e) {
 			System.out.println("Exception occurred while unsaving album for current user: " + e.getMessage());
