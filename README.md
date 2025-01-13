@@ -33,4 +33,5 @@ Stats for Spotify allows users to:
 - **API**: Spotify Web API
 - **Others**: Docker
 
+![home-page](./docs/appearance/top_tracks.png)
 
