@@ -1,3 +1,6 @@
+**Top tracks page**
+![top-tracks](./docs/appearance/top_tracks.png)
+
 # Stats for Spotify
 
 An interactive dashboard built using the Spotify Web API, designed to provide users with detailed insights into their music listening habits.
@@ -38,9 +41,6 @@ Stats for Spotify allows users to:
 
 **Home page**
 ![home-page](./docs/appearance/home_page.png)
-
-**Top tracks page**
-![top-tracks](./docs/appearance/top_tracks.png)
 
 **Profile page**
 ![profile-page](./docs/appearance/profile_page.png)
