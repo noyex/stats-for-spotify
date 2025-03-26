@@ -15,10 +15,40 @@ const LoginPage = () => {
 
   return (
     <div className="login-page">
-      <div className="login-container">
-        <h1>Welcome to Spotify Stats</h1>
-        <p>Please log in to view your Spotify data.</p>
-        <button onClick={handleLogin}>Log in with Spotify</button>
+      <div className="login-background">
+        <div className="animated-bg-circle circle-1"></div>
+        <div className="animated-bg-circle circle-2"></div>
+        <div className="animated-bg-circle circle-3"></div>
+      </div>
+      
+      <div className="login-container glass-panel">
+        <div className="login-logo">
+          <span className="spotify-icon">🎧</span>
+        </div>
+        <h1>Spotify Stats</h1>
+        <p className="login-subtitle">Odkryj swoje muzyczne preferencje i statystyki</p>
+        
+        <div className="features-list">
+          <div className="feature-item">
+            <span className="feature-icon">🎵</span>
+            <span>Twoje ulubione utwory</span>
+          </div>
+          <div className="feature-item">
+            <span className="feature-icon">👤</span>
+            <span>Informacje o profilu</span>
+          </div>
+          <div className="feature-item">
+            <span className="feature-icon">🔍</span>
+            <span>Wyszukiwanie muzyki</span>
+          </div>
+        </div>
+        
+        <button className="login-button" onClick={handleLogin}>
+          <span className="login-icon">🔒</span>
+          Zaloguj się przez Spotify
+        </button>
+        
+        <p className="privacy-note">Bezpieczne logowanie przez API Spotify</p>
       </div>
     </div>
   );

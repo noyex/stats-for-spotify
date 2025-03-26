@@ -1,35 +1,56 @@
 import React, { useState } from 'react';
-import { removeSavedAlbum } from '../services/spotifyService';
-import '../styles/RemoveButton.css';
 
 const RemoveSavedAlbumButton = ({ userId, albumId }) => {
-  const [removing, setRemoving] = useState(false);
-  const [removed, setRemoved] = useState(false);
-  const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isRemoved, setIsRemoved] = useState(false);
 
-  const handleRemoveSavedAlbum = async () => {
-    setRemoving(true);
-    setError(null);
+    const handleRemoveAlbum = async () => {
+        if (isLoading || isRemoved) return;
+        
+        setIsLoading(true);
+        
+        try {
+            const response = await fetch(`/api/remove-saved-album?userId=${userId}&albumId=${albumId}`, {
+                method: 'DELETE'
+            });
+            
+            if (response.ok) {
+                setIsRemoved(true);
+                setTimeout(() => {
+                    // Odśwież stronę po pomyślnym usunięciu
+                    window.location.reload();
+                }, 1000);
+            } else {
+                console.error('Nie udało się usunąć albumu');
+            }
+        } catch (error) {
+            console.error('Błąd podczas usuwania albumu:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-    try {
-      await removeSavedAlbum(userId, albumId);
-      setRemoved(true);
-      window.location.reload();
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setRemoving(false);
-    }
-  };
-
-  return (
-    <div>
-      <button onClick={handleRemoveSavedAlbum} disabled={removing || removed} className="remove-button">
-        {removed ? 'Removed' : removing ? 'Removing...' : <strong>Remove</strong>}
-      </button>
-      {error && <p className="error-message">Error: {error}</p>}
-    </div>
-  );
+    return (
+        <button 
+            onClick={handleRemoveAlbum} 
+            className={`action-button ${isRemoved ? 'success' : ''} ${isLoading ? 'loading' : ''}`}
+            disabled={isLoading || isRemoved}
+        >
+            {isLoading ? (
+                <span className="button-loader"></span>
+            ) : isRemoved ? (
+                <>
+                    <span className="button-icon">✓</span>
+                    Usunięto
+                </>
+            ) : (
+                <>
+                    <span className="button-icon">🗑️</span>
+                    Usuń album
+                </>
+            )}
+        </button>
+    );
 };
 
 export default RemoveSavedAlbumButton;

@@ -1,35 +1,56 @@
 import React, { useState } from 'react';
-import { unfollowArtist } from '../services/spotifyService';
-import '../styles/RemoveButton.css';
 
 const UnfollowArtistButton = ({ userId, artistId }) => {
-  const [unfollowing, setUnfollowing] = useState(false);
-  const [unfollowed, setUnfollowed] = useState(false);
-  const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isUnfollowed, setIsUnfollowed] = useState(false);
 
-  const handleUnfollowArtist = async () => {
-    setUnfollowing(true);
-    setError(null);
+    const handleUnfollow = async () => {
+        if (isLoading || isUnfollowed) return;
+        
+        setIsLoading(true);
+        
+        try {
+            const response = await fetch(`/api/unfollow-artist?userId=${userId}&artistId=${artistId}`, {
+                method: 'DELETE'
+            });
+            
+            if (response.ok) {
+                setIsUnfollowed(true);
+                setTimeout(() => {
+                    // Odśwież stronę po pomyślnym anulowaniu obserwacji
+                    window.location.reload();
+                }, 1000);
+            } else {
+                console.error('Nie udało się anulować obserwowania artysty');
+            }
+        } catch (error) {
+            console.error('Błąd podczas anulowania obserwowania:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-    try {
-      await unfollowArtist(userId, artistId);
-      setUnfollowed(true);
-      window.location.reload();
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setUnfollowing(false);
-    }
-  };
-
-  return (
-    <div>
-      <button onClick={handleUnfollowArtist} disabled={unfollowing || unfollowed} className="remove-button">
-        {unfollowed ? 'Unfollowed' : unfollowing ? 'Unfollowing...' : <strong>Unfollow</strong>}
-      </button>
-      {error && <p className="error-message">Error: {error}</p>}
-    </div>
-  );
+    return (
+        <button 
+            onClick={handleUnfollow} 
+            className={`action-button ${isUnfollowed ? 'success' : ''} ${isLoading ? 'loading' : ''}`}
+            disabled={isLoading || isUnfollowed}
+        >
+            {isLoading ? (
+                <span className="button-loader"></span>
+            ) : isUnfollowed ? (
+                <>
+                    <span className="button-icon">✓</span>
+                    Anulowano
+                </>
+            ) : (
+                <>
+                    <span className="button-icon">👋</span>
+                    Przestań obserwować
+                </>
+            )}
+        </button>
+    );
 };
 
 export default UnfollowArtistButton;
