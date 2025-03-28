@@ -9,6 +9,9 @@ import UnfollowArtistButton from '../components/UnfollowArtistButton';
 import RemoveSavedTrackButton from '../components/RemoveSavedTrackButton';
 import RemoveSavedAlbumButton from '../components/RemoveSavedAlbumButton';
 
+
+
+
 const ProfilePage = () => {
     const [userId, setUserId] = useState(null);
     const [profile, setProfile] = useState(null);
@@ -17,7 +20,6 @@ const ProfilePage = () => {
     const [albums, setAlbums] = useState([]);
     const [tracks, setTracks] = useState([]);
     const [error, setError] = useState(null);
-    const [activeTab, setActiveTab] = useState('profile');
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -37,7 +39,7 @@ const ProfilePage = () => {
             const data = await getCurrentUserProfile(id); 
             setProfile(data);
         } catch (err) {
-            setError("Nie udało się załadować profilu użytkownika.");
+            setError("Failed to load user profile.");
             console.error(err);
         }
     };
@@ -47,7 +49,7 @@ const ProfilePage = () => {
             const data = await getCurrentUserPlaylists(id); 
             setPlaylists(data);
         } catch (err) {
-            setError("Nie udało się załadować playlist.");
+            setError("Failed to load playlists.");
             console.error(err);
         }
     };
@@ -57,7 +59,7 @@ const ProfilePage = () => {
             const data = await getCurrentUserFollowedArtists(id);
             setArtists(data);
         } catch (err) {
-            setError("Nie udało się załadować obserwowanych artystów.");
+            setError("Failed to load artists.");
             console.error(err);
         }
     };
@@ -67,7 +69,7 @@ const ProfilePage = () => {
             const data = await getUserSavedAlbums(id);
             setAlbums(data);
         } catch (err) {
-            setError("Nie udało się załadować zapisanych albumów.");
+            setError("Failed to load saved albums.");
             console.error(err);
         }
     };
@@ -77,255 +79,142 @@ const ProfilePage = () => {
             const data = await getCurrentUserSavedTracks(id);
             setTracks(data);
         } catch (err) {
-            setError("Nie udało się załadować zapisanych utworów.");
+            setError("Failed to load saved tracks.");
             console.error(err);
         }
     }
 
     return (
         <div className="profile-page">
+            <nav className="nav-bar">
             {userId && <Navbar userId={userId} />}
-            
-            <div className="container">
-                {error && <div className="error-message">{error}</div>}
-                
-                <div className="profile-header glass-panel">
+            </nav>
+            <div className="profile-layout">
+                <div className="profile-left">
+                    <h2 className="playlists-header">Your Playlists</h2>
+                    {playlists.length > 0 ? (
+                        <ul className="playlist-list">
+                            {playlists.map((playlist) => (
+                                <li key={playlist.id} className="playlist-item">
+                                    <img
+                                        src={playlist.images?.[0]?.url || '/placeholder.png'}
+                                        alt={playlist.name}
+                                        className="playlist-picture"
+                                    />
+                                    <div className="playlist-details">
+                                        <h3 className="playlist-name">{playlist.name}</h3>
+                                        <p className="playlist-tracks">Tracks: {playlist.tracks.total}</p>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="no-playlists-message">No playlists available.</p>
+                    )}
+                </div>
+
+                <div className="profile-center">
+                    <h1>Your Profile</h1>
+                    {error && <p className="error-message">{error}</p>}
                     {profile ? (
-                        <div className="profile-info-container">
-                            <div className="profile-avatar-container">
-                                <img
-                                    src={profile.images?.[0]?.url || '/placeholder.png'}
-                                    alt="Profil"
-                                    className="profile-avatar"
-                                />
-                                <div className="profile-status">Premium</div>
-                            </div>
-                            <div className="profile-details">
-                                <h1>{profile.display_name || `${userId}`}</h1>
-                                <div className="profile-stats">
-                                    <div className="stat-item">
-                                        <span className="stat-value">{profile.followers.total || '0'}</span>
-                                        <span className="stat-label">Obserwujących</span>
-                                    </div>
-                                    <div className="stat-item">
-                                        <span className="stat-value">{playlists.length}</span>
-                                        <span className="stat-label">Playlisty</span>
-                                    </div>
-                                    <div className="stat-item">
-                                        <span className="stat-value">{tracks.length}</span>
-                                        <span className="stat-label">Utwory</span>
-                                    </div>
-                                </div>
-                                <div className="profile-actions">
-                                    <SpotifyProfileButton userId={userId} />
-                                    <LogoutButton userId={userId} />
-                                </div>
-                                <div className="profile-meta">
-                                    <div className="meta-item">
-                                        <span className="meta-icon">🌍</span>
-                                        <span>{profile.country || 'N/A'}</span>
-                                    </div>
-                                    <div className="meta-item">
-                                        <span className="meta-icon">💌</span>
-                                        <span>{profile.email || 'N/A'}</span>
-                                    </div>
-                                    <div className="meta-item">
-                                        <span className="meta-icon">💎</span>
-                                        <span>{profile.product || 'N/A'}</span>
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="profile-container">
+                            <img
+                                src={profile.images?.[0]?.url || '/placeholder.png'}
+                                alt="Profile"
+                                className="profile-picture"
+                            />
+                            <h2>{profile.display_name || `${userId}`}</h2>
+                            <SpotifyProfileButton userId={userId} />
+                            <p><strong>Country:</strong> {profile.country || 'N/A'}</p>
+                            <p><strong>Subscription:</strong> {profile.product || 'N/A'}</p>
+                            <p><strong>Email:</strong> {profile.email || 'N/A'}</p>
+                            <p><strong>Followers:</strong> {profile.followers.total || 'N/A'}</p>
+                            <LogoutButton userId={userId} />
                         </div>
                     ) : (
-                        <div className="loading">Ładowanie profilu...</div>
+                        <p>Loading profile...</p>
                     )}
                 </div>
-                
-                <div className="profile-tabs">
-                    <button 
-                        className={`tab-button ${activeTab === 'profile' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('profile')}
-                    >
-                        <span className="tab-icon">👤</span> Profil
-                    </button>
-                    <button 
-                        className={`tab-button ${activeTab === 'playlists' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('playlists')}
-                    >
-                        <span className="tab-icon">📋</span> Playlisty
-                    </button>
-                    <button 
-                        className={`tab-button ${activeTab === 'artists' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('artists')}
-                    >
-                        <span className="tab-icon">🎤</span> Artyści
-                    </button>
-                    <button 
-                        className={`tab-button ${activeTab === 'albums' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('albums')}
-                    >
-                        <span className="tab-icon">💿</span> Albumy
-                    </button>
-                    <button 
-                        className={`tab-button ${activeTab === 'tracks' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('tracks')}
-                    >
-                        <span className="tab-icon">🎵</span> Utwory
-                    </button>
+
+                <div className="profile-right">
+                    <h2 className="artists-header">Followed Artists</h2>
+                    {artists.length > 0 ? (
+                        <ul className="artists-list">
+                            {artists.map((artist) => (
+                                <li key={artist.id} className="artists-item">
+                                    <img
+                                        src={artist.images?.[0]?.url || '/placeholder.png'}
+                                        alt={artist.name}
+                                        className="artists-picture"
+                                    />
+                                    <div className="artists-details">
+                                        <h3 className="artists-name">{artist.name}</h3>
+                                        <UnfollowArtistButton userId={userId} artistId={artist.id} />
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <p className="no-artists-message">No artists available.</p>
+                    )}
                 </div>
-                
-                <div className="tab-content">
-                    {activeTab === 'profile' && (
-                        <div className="profile-summary glass-panel">
-                            <h2>Podsumowanie konta</h2>
-                            <p>Witaj w swoim profilu Spotify Stats. Tutaj znajdziesz wszystkie informacje o swojej aktywności na Spotify, ulubionych artystach, albumach i utworach.</p>
-                            <div className="account-tips">
-                                <h3>Porady</h3>
-                                <ul className="tips-list">
-                                    <li>Słuchaj więcej swoich ulubionych artystów, aby ulepszyć rekomendacje</li>
-                                    <li>Twórz playlisty dla różnych okazji i nastrojów</li>
-                                    <li>Zapisuj swoje ulubione utwory, by móc do nich wrócić później</li>
-                                </ul>
-                            </div>
-                        </div>
-                    )}
-                    
-                    {activeTab === 'playlists' && (
-                        <div className="playlists-container">
-                            <h2>Twoje playlisty</h2>
-                            {playlists.length > 0 ? (
-                                <div className="playlists-grid grid grid-3">
-                                    {playlists.map((playlist) => (
-                                        <div key={playlist.id} className="playlist-card card">
-                                            <div className="playlist-image-container">
-                                                <img
-                                                    src={playlist.images?.[0]?.url || '/placeholder.png'}
-                                                    alt={playlist.name}
-                                                    className="playlist-image"
-                                                />
-                                                <div className="playlist-overlay">
-                                                    <span className="tracks-count">{playlist.tracks.total} utworów</span>
-                                                </div>
-                                            </div>
-                                            <div className="playlist-info">
-                                                <h3 className="playlist-name" title={playlist.name}>{playlist.name}</h3>
-                                                <p className="playlist-description">{playlist.description || "Brak opisu"}</p>
-                                            </div>
+            </div>
+
+            <div className="bottom-layout">
+                <div className="saved-albums-left">
+                    <h2>Your Saved Albums</h2>
+                    {albums.length > 0 ? (
+                        <ul className="albums-list">
+                            {albums.map((item, index) => {
+                                const album = item.album;
+                                const artistNames = album.artists.map((artist) => artist.name).join(", ");
+                                return (
+                                    <li key={index} className="album-item">
+                                        <img
+                                            src={album.images?.[0]?.url || '/placeholder.png'}
+                                            alt={album.name}
+                                            className="album-image"
+                                        />
+                                        <div className="album-details">
+                                            <p className="album-name">{album.name}</p>
+                                            <p className="album-tracks">Tracks: {album.tracks.total}</p>
+                                            <p className="album-artist">Artists: {artistNames}</p>
+                                            <RemoveSavedAlbumButton userId={userId} albumId={album.id} />
                                         </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p className="no-content-message">Nie masz żadnych playlist.</p>
-                            )}
-                        </div>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    ) : (
+                        <p className="no-albums-message">No saved albums available.</p>
                     )}
-                    
-                    {activeTab === 'artists' && (
-                        <div className="artists-container">
-                            <h2>Obserwowani artyści</h2>
-                            {artists.length > 0 ? (
-                                <div className="artists-grid grid grid-3">
-                                    {artists.map((artist) => (
-                                        <div key={artist.id} className="artist-card card">
-                                            <div className="artist-image-container">
-                                                <img
-                                                    src={artist.images?.[0]?.url || '/placeholder.png'}
-                                                    alt={artist.name}
-                                                    className="artist-image"
-                                                />
-                                            </div>
-                                            <div className="artist-info">
-                                                <h3 className="artist-name">{artist.name}</h3>
-                                                <p className="artist-followers">{artist.followers.total.toLocaleString()} obserwujących</p>
-                                                <div className="artist-genres">
-                                                    {artist.genres.slice(0, 3).map((genre, index) => (
-                                                        <span key={index} className="genre-tag">{genre}</span>
-                                                    ))}
-                                                </div>
-                                                <UnfollowArtistButton userId={userId} artistId={artist.id} />
-                                            </div>
+                </div>
+                <div className="saved-tracks-right">
+                    <h2>Saved Tracks</h2>
+                    {tracks.length > 0 ? (
+                        <ul className="track-list-profile">
+                            {tracks.map((item, index) => {
+                                const track = item.track;
+                                const artistNames = track.artists.map((artist) => artist.name).join(", ");
+                                return (
+                                    <li key={index} className="track-item-profile">
+                                        <img
+                                            src={track.album?.images?.[0]?.url || '/placeholder.png'}
+                                            alt={track.name}
+                                            className="track-image-profile"
+                                        />
+                                        <div className="track-details-profile">
+                                            <p className="album-name">{track.name}</p>
+                                            <p className="track-artist-profile">Artists: {artistNames}</p>
+                                            <p className="track-album-profile">Album: {track.album.name}</p>
+                                            <RemoveSavedTrackButton userId={userId} trackId={track.id} />
                                         </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p className="no-content-message">Nie obserwujesz żadnych artystów.</p>
-                            )}
-                        </div>
-                    )}
-                    
-                    {activeTab === 'albums' && (
-                        <div className="albums-container">
-                            <h2>Zapisane albumy</h2>
-                            {albums.length > 0 ? (
-                                <div className="albums-grid grid grid-3">
-                                    {albums.map((item, index) => {
-                                        const album = item.album;
-                                        const artistNames = album.artists.map((artist) => artist.name).join(", ");
-                                        return (
-                                            <div key={index} className="album-card card">
-                                                <div className="album-image-container">
-                                                    <img
-                                                        src={album.images?.[0]?.url || '/placeholder.png'}
-                                                        alt={album.name}
-                                                        className="album-image"
-                                                    />
-                                                    <div className="album-overlay">
-                                                        <span className="album-year">{new Date(album.release_date).getFullYear()}</span>
-                                                    </div>
-                                                </div>
-                                                <div className="album-info">
-                                                    <h3 className="album-name" title={album.name}>{album.name}</h3>
-                                                    <p className="album-artist">{artistNames}</p>
-                                                    <p className="album-tracks">{album.tracks.total} utworów</p>
-                                                    <RemoveSavedAlbumButton userId={userId} albumId={album.id} />
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            ) : (
-                                <p className="no-content-message">Nie masz zapisanych albumów.</p>
-                            )}
-                        </div>
-                    )}
-                    
-                    {activeTab === 'tracks' && (
-                        <div className="tracks-container">
-                            <h2>Zapisane utwory</h2>
-                            {tracks.length > 0 ? (
-                                <div className="tracks-list">
-                                    {tracks.map((item, index) => {
-                                        const track = item.track;
-                                        const artistNames = track.artists.map((artist) => artist.name).join(", ");
-                                        return (
-                                            <div key={index} className="track-item glass-panel">
-                                                <div className="track-number">{index + 1}</div>
-                                                <div className="track-image-container">
-                                                    <img
-                                                        src={track.album?.images?.[0]?.url || '/placeholder.png'}
-                                                        alt={track.name}
-                                                        className="track-image"
-                                                    />
-                                                </div>
-                                                <div className="track-info">
-                                                    <h3 className="track-name">{track.name}</h3>
-                                                    <p className="track-artist">{artistNames}</p>
-                                                </div>
-                                                <div className="track-album">{track.album.name}</div>
-                                                <div className="track-duration">
-                                                    {Math.floor(track.duration_ms / 60000)}:{((track.duration_ms % 60000) / 1000).toFixed(0).padStart(2, '0')}
-                                                </div>
-                                                <div className="track-actions">
-                                                    <RemoveSavedTrackButton userId={userId} trackId={track.id} />
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            ) : (
-                                <p className="no-content-message">Nie masz zapisanych utworów.</p>
-                            )}
-                        </div>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    ) : (
+                        <p className="no-tracks-message">No saved tracks available.</p>
                     )}
                 </div>
             </div>

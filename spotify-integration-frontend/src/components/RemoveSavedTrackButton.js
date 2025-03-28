@@ -1,56 +1,35 @@
 import React, { useState } from 'react';
+import { removeSavedTrack } from '../services/spotifyService';
+import '../styles/RemoveButton.css';
 
 const RemoveSavedTrackButton = ({ userId, trackId }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [isRemoved, setIsRemoved] = useState(false);
+  const [removing, setRemoving] = useState(false);
+  const [removed, setRemoved] = useState(false);
+  const [error, setError] = useState(null);
 
-    const handleRemoveTrack = async () => {
-        if (isLoading || isRemoved) return;
-        
-        setIsLoading(true);
-        
-        try {
-            const response = await fetch(`/api/remove-saved-track?userId=${userId}&trackId=${trackId}`, {
-                method: 'DELETE'
-            });
-            
-            if (response.ok) {
-                setIsRemoved(true);
-                setTimeout(() => {
-                    // Odśwież stronę po pomyślnym usunięciu
-                    window.location.reload();
-                }, 1000);
-            } else {
-                console.error('Nie udało się usunąć utworu');
-            }
-        } catch (error) {
-            console.error('Błąd podczas usuwania utworu:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const handleRemoveSavedTrack = async () => {
+    setRemoving(true);
+    setError(null);
 
-    return (
-        <button 
-            onClick={handleRemoveTrack} 
-            className={`action-button ${isRemoved ? 'success' : ''} ${isLoading ? 'loading' : ''}`}
-            disabled={isLoading || isRemoved}
-        >
-            {isLoading ? (
-                <span className="button-loader"></span>
-            ) : isRemoved ? (
-                <>
-                    <span className="button-icon">✓</span>
-                    Usunięto
-                </>
-            ) : (
-                <>
-                    <span className="button-icon">🗑️</span>
-                    Usuń
-                </>
-            )}
-        </button>
-    );
+    try {
+      await removeSavedTrack(userId, trackId);
+      setRemoved(true);
+      window.location.reload();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setRemoving(false);
+    }
+  };
+
+  return (
+    <div>
+      <button onClick={handleRemoveSavedTrack} disabled={removing || removed} className="remove-button">
+        {removed ? 'Removed' : removing ? 'Removing...' : <strong>Remove</strong>}
+      </button>
+      {error && <p className="error-message">Error: {error}</p>}
+    </div>
+  );
 };
 
 export default RemoveSavedTrackButton;

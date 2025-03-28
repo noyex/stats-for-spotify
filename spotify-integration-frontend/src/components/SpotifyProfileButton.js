@@ -1,25 +1,13 @@
-import React from 'react';
+import React from "react";
 
-const SpotifyProfileButton = ({ userId }) => {
-    const redirectToSpotifyProfile = async () => {
-        try {
-            const response = await fetch(`/api/get-spotify-profile-url?userId=${userId}`);
-            const data = await response.json();
-            
-            if (data.url) {
-                window.open(data.url, '_blank');
-            }
-        } catch (error) {
-            console.error('Error redirecting to Spotify profile:', error);
+const SpotifyProfileButton = ({userId}) => {
+    const handleSpotifyProfile = async () => {
+        if(!userId){
+            console.error('User ID is missing');
+            return;
         }
+            window.location.href = `https://open.spotify.com/user/${userId}`;
     };
-
-    return (
-        <button onClick={redirectToSpotifyProfile} className="spotify-button">
-            <span className="button-icon">🌐</span>
-            Przejdź do profilu Spotify
-        </button>
-    );
+    return <button onClick={handleSpotifyProfile} className="spotify-profile-button">Spotify Profile</button>;
 };
-
 export default SpotifyProfileButton;
